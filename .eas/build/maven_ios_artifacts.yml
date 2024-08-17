@@ -1,0 +1,45 @@
+build:
+  name: Create Maven iOS artifacts
+  steps:
+    - eas/checkout
+    - eas/install_node_modules
+    - run:
+        name: Validate environment settings
+        command: |
+          ./src/validate-env.ts
+    - install_cmake
+    - install_java
+    - install_android_sdk
+    - run:
+        name: Clone React Native and install dependencies
+        command: |
+          ./src/clone-and-install-deps.ts
+    - run:
+        name: Build React Native iOS Maven artifacts
+        command: |
+          ./src/build-ios-artifacts.ts
+    - run:
+        name: Create Maven artifact tarball
+        command: |
+          ./src/create-artifact-tarball.ts
+    - run:
+        name: Create NPM tarballs
+        command: |
+          ./src/create-npm-tarballs.ts
+    - eas/upload_artifact:
+        name: Upload Maven artifacts
+        inputs:
+          type: build-artifact
+          path: |
+            maven_artifacts/*.tgz
+
+functions:
+  install_java:
+    name: Install Java
+    path: ./installJava
+  install_cmake:
+    name: Install Cmake
+    path: ./installCmake
+  install_android_sdk:
+    name: Install Android SDK
+    path: ./installAndroidSDK

@@ -1,0 +1,12 @@
+{
+  "expo": {
+    "name": "react-native-eas-ci",
+    "slug": "react-native-eas-ci",
+    "android": {
+      "package": "com.reactnativeeasci"
+    },
+    "ios": {
+      "bundleIdentifier": "com.reactnativeeasci"
+    }
+  }
+}

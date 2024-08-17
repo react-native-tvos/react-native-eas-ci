@@ -1,0 +1,23 @@
+build:
+  name: Run JS unit tests
+  steps:
+    - eas/checkout
+    - eas/install_node_modules
+    - run:
+        name: Validate environment settings
+        command: |
+          ./src/validate-env.ts
+    - run:
+        name: Clone React Native and install dependencies
+        command: |
+          ./src/clone-and-install-deps.ts
+    - run:
+        name: Run JS unit tests
+        command: |
+          ./src/run-unit-tests.ts
+    - eas/upload_artifact:
+        name: Upload test log as the build artifact
+        inputs:
+          type: build-artifact
+          path: |
+            unit-tests.log

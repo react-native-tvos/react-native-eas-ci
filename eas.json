@@ -1,0 +1,79 @@
+{
+  "cli": {
+    "version": ">= 3.15.1"
+  },
+  "build": {
+    "maven_android_artifacts_tv_release": {
+      "env": {
+        "PUBLISH_TO_SONATYPE": "true",
+        "REACT_NATIVE_REPO_URL": "https://github.com/react-native-tvos/react-native-tvos",
+        "REACT_NATIVE_REPO_BRANCH" : "tvos-v0.74.0"
+      },
+      "resourceClass": "large",
+      "config": "maven_android_artifacts.yml",
+      "withoutCredentials": true,
+      "distribution": "internal"
+    },
+    "maven_ios_artifacts_tv_release": {
+      "env": {
+        "PUBLISH_TO_SONATYPE": "true",
+        "REACT_NATIVE_REPO_URL": "https://github.com/react-native-tvos/react-native-tvos",
+        "REACT_NATIVE_REPO_BRANCH" : "tvos-v0.74.0"
+      },
+      "resourceClass": "large",
+      "config": "maven_ios_artifacts.yml",
+      "withoutCredentials": true,
+      "distribution": "internal"
+    },
+    "maven_android_artifacts_tv_snapshot_test": {
+      "env": {
+        "IS_SNAPSHOT": "true",
+        "REACT_NATIVE_REPO_URL": "https://github.com/react-native-tvos/react-native-tvos",
+        "REACT_NATIVE_REPO_BRANCH" : "doug/ci"
+      },
+      "resourceClass": "large",
+      "config": "maven_android_artifacts.yml",
+      "withoutCredentials": true,
+      "distribution": "internal"
+    },
+    "maven_ios_artifacts_tv_snapshot_test": {
+      "env": {
+        "IS_SNAPSHOT": "true",
+        "REACT_NATIVE_REPO_URL": "https://github.com/react-native-tvos/react-native-tvos",
+        "REACT_NATIVE_REPO_BRANCH" : "doug/ci"
+      },
+      "resourceClass": "large",
+      "config": "maven_ios_artifacts.yml",
+      "withoutCredentials": true,
+      "distribution": "internal"
+    },
+    "run_unit_tests_tv": {
+      "env": {
+        "REACT_NATIVE_REPO_URL": "https://github.com/react-native-tvos/react-native-tvos",
+        "REACT_NATIVE_REPO_BRANCH" : "doug/ci"
+      },
+      "config": "run_unit_tests.yml",
+      "withoutCredentials": true,
+      "distribution": "internal"
+    },
+    "run_unit_tests_core": {
+      "env": {
+        "REACT_NATIVE_REPO_URL": "https://github.com/facebook/react-native",
+        "REACT_NATIVE_REPO_BRANCH" : "0.74-stable"
+      },
+      "config": "run_unit_tests.yml",
+      "withoutCredentials": true,
+      "distribution": "internal"
+    },
+    "print_settings": {
+      "env": {
+        "REACT_NATIVE_REPO_URL": "https://github.com/react-native-tvos/react-native-tvos",
+        "REACT_NATIVE_REPO_BRANCH" : "doug/ci"
+      },
+      "config": "print_settings.yml",
+      "withoutCredentials": true,
+      "distribution": "internal"
+    }
+  }
+}
+
