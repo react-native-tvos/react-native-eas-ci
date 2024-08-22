@@ -40,7 +40,13 @@ const HERMES_DSYMS_DEST_DIR = path.join(process.env.TMPDIR, 'hermes', 'dSYM');
 const SDKS_DIR = path.resolve(packagePath, 'sdks');
 const HERMES_DIR = path.join(SDKS_DIR, 'hermes');
 const HERMES_TAG_FILE_PATH = path.join(SDKS_DIR, '.hermesversion');
-const HERMES_SOURCE_BASE_URL = 'https://github.com/react-native-tvos/hermes';
+const HERMES_PATCH_FILE_PATH = path.join(
+  packagePath,
+  'scripts',
+  'hermes',
+  'hermes.patch',
+);
+const HERMES_SOURCE_BASE_URL = 'https://github.com/facebook/hermes';
 const HERMES_TARBALL_DOWNLOAD_DIR = path.join(SDKS_DIR, 'download');
 
 const MAC_DEPLOYMENT_TARGET = '10.13';
@@ -211,6 +217,14 @@ const buildHermesIosArtifactAsync = async (buildType: HermesBuildType) => {
     {},
   );
   echo(`Unpacked ${hermesDownloadFilepath} to ${HERMES_DIR}`);
+
+  if (test('-e', HERMES_PATCH_FILE_PATH)) {
+    await spawnAsync('patch', ['-p1', '-i', HERMES_PATCH_FILE_PATH], {
+      cwd: HERMES_DIR,
+      stdio: 'inherit',
+    });
+    echo(`Patched Hermes from ${HERMES_PATCH_FILE_PATH}`);
+  }
 
   await fs.copyFile(
     path.join(SDKS_DIR, 'hermes-engine', 'hermes-engine.podspec'),
