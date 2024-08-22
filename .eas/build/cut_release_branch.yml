@@ -1,0 +1,17 @@
+build:
+  name: Run JS unit tests
+  steps:
+    - eas/checkout
+    - eas/install_node_modules
+    - run:
+        name: Validate environment settings
+        command: |
+          ./src/validate-env.ts
+    - run:
+        name: Clone React Native and install dependencies
+        command: |
+          ./src/clone-and-install-deps.ts
+    - run:
+        name: Bump release version and push release branch
+        command: |
+          ./src/cut-release-branch.ts

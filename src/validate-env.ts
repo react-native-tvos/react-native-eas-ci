@@ -25,6 +25,16 @@ In the EAS build environment, these must be set as secret strings for publishing
   ORG_GRADLE_PROJECT_SONATYPE_PASSWORD
 `;
 
+const githubSecretsWarningMessage = `
+In the EAS build environment, these must be set as secret strings for pushing a release branch to GitHub:
+  GITHUB_USER
+  GITHUB_TOKEN
+  GIT_AUTHOR_NAME
+  GIT_AUTHOR_EMAIL
+  GIT_COMMITTER_NAME
+  GIT_COMMITTER_EMAIL
+`;
+
 export const validateEnv = () => {
   if (!repoConstants.repoUrl.length || !repoConstants.repoBranch.length) {
     throw new Error(envErrorMessage);
@@ -43,6 +53,16 @@ export const validateSecrets = () => {
     !process.env.ORG_GRADLE_PROJECT_SONATYPE_PASSWORD
   ) {
     console.warn(sonatypeSecretsWarningMessage);
+  }
+  if (
+    !process.env.GITHUB_USER ||
+    !process.env.GITHUB_TOKEN ||
+    !process.env.GIT_AUTHOR_NAME ||
+    !process.env.GIT_AUTHOR_EMAIL ||
+    !process.env.GIT_COMMITTER_NAME ||
+    !process.env.GIT_COMMITTER_EMAIL
+  ) {
+    console.warn(githubSecretsWarningMessage);
   }
 };
 

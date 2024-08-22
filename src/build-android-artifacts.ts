@@ -6,18 +6,25 @@ import { echo, exit, exec, test } from 'shelljs';
 import path from 'path';
 import { promises as fs } from 'node:fs';
 import os from 'os';
+import spawnAsync from '@expo/spawn-async';
 
 import {
   copyDirectoryAsync,
   downloadFileAsync,
+  easConstants,
   repoConstants,
   runGradlewTaskAsync,
   recreateDirectoryAsync,
   copyPublishGradleFileAsync,
   getMavenConstantsAsync,
+  baseCoreVersionStringForTV,
+  getPackages,
+  ProjectInfo,
+  unpackTarArchiveAsync,
 } from './common';
 
-const { repoPath, rnPackagePath } = repoConstants;
+const { repoName, repoPath, rnPackagePath } = repoConstants;
+const { buildDir } = easConstants;
 
 export const validateAndroidArtifactsAsync = async (releaseVersion: string) => {
   let artifacts = [
@@ -56,9 +63,7 @@ const executeScriptAsync = async function () {
   const HERMES_INSTALL_LOCATION = path.resolve(rnPackagePath, 'sdks');
   const HERMES_SOURCE_DEST_PATH = path.join(HERMES_INSTALL_LOCATION, 'hermes');
   const HERMES_VERSION_PATH = path.resolve(
-    repoPath,
-    'node_modules',
-    'react-native-core',
+    rnPackagePath,
     'sdks',
     '.hermesversion',
   );
@@ -81,11 +86,36 @@ const executeScriptAsync = async function () {
     exit(1);
   }
 
+  const packages: ProjectInfo = await getPackages({
+    includeReactNative: true,
+    includePrivate: false,
+  });
+
+  console.log(`repoName = ${repoName}`);
+
+  const reactNativeVersion = packages[repoName].version;
+  console.log(`reactNativeVersion = ${reactNativeVersion}`);
+  const reactNativeCoreVersion = baseCoreVersionStringForTV(reactNativeVersion);
+  console.log(`reactNativeCoreVersion = ${reactNativeCoreVersion}`);
+
+  const REACT_NATIVE_CORE_PATH = path.join(buildDir, 'react-native-core');
+  await recreateDirectoryAsync(REACT_NATIVE_CORE_PATH);
+  await spawnAsync('npm', ['pack', `react-native@${reactNativeCoreVersion}`], {
+    cwd: REACT_NATIVE_CORE_PATH,
+    stdio: 'ignore',
+  });
+  await unpackTarArchiveAsync(
+    path.resolve(
+      REACT_NATIVE_CORE_PATH,
+      `react-native-${reactNativeCoreVersion}.tgz`,
+    ),
+    REACT_NATIVE_CORE_PATH,
+  );
+
   // Copy hermesc from RN core release
   const HERMESC_SOURCE_LOCATION = path.resolve(
-    repoPath,
-    'node_modules',
-    'react-native-core',
+    REACT_NATIVE_CORE_PATH,
+    'package',
     'sdks',
     'hermesc',
   );

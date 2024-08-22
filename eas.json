@@ -5,9 +5,9 @@
   "build": {
     "maven_android_artifacts_tv_release": {
       "env": {
-        "PUBLISH_TO_SONATYPE": "true",
+        "PUBLISH_TO_SONATYPE": "false",
         "REACT_NATIVE_REPO_URL": "https://github.com/react-native-tvos/react-native-tvos",
-        "REACT_NATIVE_REPO_BRANCH" : "tvos-v0.74.0"
+        "REACT_NATIVE_REPO_BRANCH" : "release-0.75.2-0rc0"
       },
       "resourceClass": "large",
       "config": "maven_android_artifacts.yml",
@@ -16,9 +16,9 @@
     },
     "maven_ios_artifacts_tv_release": {
       "env": {
-        "PUBLISH_TO_SONATYPE": "true",
+        "PUBLISH_TO_SONATYPE": "false",
         "REACT_NATIVE_REPO_URL": "https://github.com/react-native-tvos/react-native-tvos",
-        "REACT_NATIVE_REPO_BRANCH" : "tvos-v0.74.0"
+        "REACT_NATIVE_REPO_BRANCH" : "release-0.75.2-0rc0"
       },
       "resourceClass": "large",
       "config": "maven_ios_artifacts.yml",
@@ -44,6 +44,16 @@
       },
       "resourceClass": "large",
       "config": "maven_ios_artifacts.yml",
+      "withoutCredentials": true,
+      "distribution": "internal"
+    },
+    "cut_release_branch_tv": {
+      "env": {
+        "REACT_NATIVE_REPO_URL": "https://github.com/react-native-tvos/react-native-tvos",
+        "REACT_NATIVE_REPO_BRANCH" : "tvos-v0.75.0",
+        "REACT_NATIVE_RELEASE_VERSION": "0.75.2-0rc0"
+      },
+      "config": "cut_release_branch.yml",
       "withoutCredentials": true,
       "distribution": "internal"
     },
