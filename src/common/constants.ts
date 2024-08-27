@@ -68,6 +68,10 @@ export const getMavenConstantsAsync: () => Promise<MavenConstants> =
     const publishToSonatype = boolValueFromString(
       process.env.PUBLISH_TO_SONATYPE,
     );
+    const pushReleaseToRepo = boolValueFromString(
+      process.env.PUSH_RELEASE_TO_REPO,
+    );
+
     return {
       namespace,
       mavenLocalPath,
@@ -76,5 +80,6 @@ export const getMavenConstantsAsync: () => Promise<MavenConstants> =
       isSnapshot,
       releaseVersion,
       publishToSonatype,
+      pushReleaseToRepo,
     };
   };

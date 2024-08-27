@@ -15,6 +15,7 @@ export type MavenConstants = {
   isSnapshot: boolean;
   releaseVersion: string;
   publishToSonatype: boolean;
+  pushReleaseToRepo: boolean;
 };
 
 export type EasConstants = {

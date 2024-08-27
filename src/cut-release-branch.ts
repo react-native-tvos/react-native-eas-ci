@@ -18,6 +18,7 @@ import {
   updatePackageJson,
   applyPackageVersions,
   pushBranch,
+  getMavenConstantsAsync,
 } from './common';
 
 const { repoPath, rnPackagePath } = repoConstants;
@@ -73,7 +74,11 @@ async function executeScriptAsync() {
   console.log(`Branch = ${branchAfterRelease}`);
   console.log(`Latest commit = ${latestCommitAfterRelease}`);
 
-  await pushBranch(releaseBranch);
+  const { pushReleaseToRepo } = await getMavenConstantsAsync();
+
+  if (pushReleaseToRepo) {
+    await pushBranch(releaseBranch);
+  }
 }
 
 async function setReactNativeVersion(
