@@ -95,6 +95,16 @@ async function setReactNativeVersion(
   for (const packageName in packages) {
     const packageInfo = packages[packageName];
     await updatePackageJson(packageInfo.path, packageInfo.packageJson, {
+      '@react-native/babel-plugin-codegen': versionInfo.version,
+      '@react-native/debugger-frontend': versionInfo.version,
+      '@react-native/dev-middleware': versionInfo.version,
+      helloworld: versionInfo.version,
+      '@react-native/babel-preset': versionInfo.version,
+      '@react-native/popup-menu-android': versionInfo.version,
+      '@react-native/oss-library-example': versionInfo.version,
+      '@react-native/test-renderer': versionInfo.version,
+      '@react-native/tester-e2e': versionInfo.version,
+      '@react-native/tester': versionInfo.version,
       '@react-native-tvos/virtualized-lists': versionInfo.version,
     });
   }

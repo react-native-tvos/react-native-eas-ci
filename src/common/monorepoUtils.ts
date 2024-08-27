@@ -16,7 +16,7 @@ import { promises as fs } from 'fs';
 import glob from 'glob';
 import path from 'path';
 
-const { repoPath } = repoConstants;
+const { repoName, repoPath } = repoConstants;
 
 const WORKSPACES_CONFIG = 'packages/*';
 
@@ -90,11 +90,21 @@ export async function updatePackageJson(
     packageJson.version = newPackageVersions[packageName];
   }
 
-  for (const dependencyField of ['dependencies', 'devDependencies']) {
+  for (const dependencyField of [
+    'dependencies',
+    'devDependencies',
+    'peerDependencies',
+  ]) {
     const deps = packageJson[dependencyField];
 
     if (deps == null) {
       continue;
+    }
+
+    if (deps['react-native']) {
+      delete deps['react-native'];
+      deps[repoName] =
+        dependencyField === 'peerDependencies' ? '*' : packageJson.version;
     }
 
     for (const dependency in newPackageVersions) {
