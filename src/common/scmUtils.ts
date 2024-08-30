@@ -81,9 +81,13 @@ export async function setCredentials() {
   });
 }
 
-export async function pushBranch(branchName: string) {
+export async function pushBranch(branchName?: string) {
   await setCredentials();
-  await spawnAsync('git', ['push', '--set-upstream', 'origin', branchName], {
+  // If new branch, add required arguments
+  const args = branchName
+    ? ['push', '--set-upstream', 'origin', branchName]
+    : ['push'];
+  await spawnAsync('git', args, {
     stdio: 'inherit',
     cwd: repoPath,
   });

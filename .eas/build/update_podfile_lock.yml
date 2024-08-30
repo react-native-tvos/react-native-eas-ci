@@ -1,5 +1,5 @@
 build:
-  name: Cut release branch
+  name: Update Podfile.lock
   steps:
     - eas/checkout
     - eas/install_node_modules
@@ -12,6 +12,6 @@ build:
         command: |
           ./src/clone-and-install-deps.ts
     - run:
-        name: Bump release version and push release branch
+        name: Update Podfile.lock and push to branch
         command: |
-          ./src/cut-release-branch.ts
+          ./src/update-podfile-lock.ts
