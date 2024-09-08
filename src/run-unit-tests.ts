@@ -79,6 +79,9 @@ const executeScriptAsync: () => Promise<void> = async () => {
   echo('Rewrite react-native package name...');
   await rewriteReactNativePackageNameAsync();
 
+  echo('Reinstall NPM packages...');
+  await runTestTaskAsync();
+
   describe('Test: feature flags codegen');
   const featureFlagsResult = await runTestTaskAsync({
     command: 'featureflags-check',
@@ -95,14 +98,12 @@ const executeScriptAsync: () => Promise<void> = async () => {
     throw new Error('ESLint test failed.');
   }
 
-  /*
   describe('Test: Flow check');
-  const flowResult = await runYarnTaskAsync({command: 'flow-check'});
+  const flowResult = await runTestTaskAsync({ command: 'flow-check' });
   await appendToTestResultsAsync(flowResult.output.join('\n'));
   if (flowResult.status) {
     throw new Error('Flow check failed.');
   }
-   */
 
   describe('Test: Build @react-native/codegen');
   const codegenResult = await runTestTaskAsync({
