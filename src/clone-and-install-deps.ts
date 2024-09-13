@@ -17,10 +17,14 @@ const executeScriptAsync = async () => {
     await unpackTarArchiveAsync(sourceTarballPath, '.');
   } else {
     echo(`Clone ${repoName}...`);
-    await spawnAsync('git', ['clone', repoUrl, '-b', repoBranch], {
-      cwd: '.',
-      stdio: 'inherit',
-    });
+    await spawnAsync(
+      'git',
+      ['clone', '--single-branch', '--no-tags', repoUrl, '-b', repoBranch],
+      {
+        cwd: '.',
+        stdio: 'inherit',
+      },
+    );
   }
   echo('Installing RN dependencies...');
   await spawnAsync('yarn', [], {
