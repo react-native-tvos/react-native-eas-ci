@@ -89,9 +89,11 @@ function validateRelease(version: Version) {
 /**
  * TV Releases are in the form of 0.Y.Z-0
  * TV Prereleases are in the form of 0.Y.Z-0rc0
+ * TV test releases are in the form of 0.Y.Z-0test0
  */
 function validateTVRelease(version: Version) {
-  const validRelease = isTVRelease(version) || isTVPrerelease(version);
+  const validRelease =
+    isTVRelease(version) || isTVPrerelease(version) || isTVTestRelease(version);
   if (!validRelease) {
     throw new Error(`Version ${version.version} is not valid for Release`);
   }
@@ -156,6 +158,15 @@ export function isTVPrerelease(version: Version) {
     version.minor.match(/^\d+$/) &&
     version.patch.match(/^\d+$/) &&
     version.prerelease?.match(/^(\d+)rc(\d+)$/)
+  );
+}
+
+export function isTVTestRelease(version: Version) {
+  return !!(
+    version.major === '0' &&
+    version.minor.match(/^\d+$/) &&
+    version.patch.match(/^\d+$/) &&
+    version.prerelease?.match(/^(\d+)test(\d+)$/)
   );
 }
 
