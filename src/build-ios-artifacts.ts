@@ -51,6 +51,7 @@ const HERMES_TARBALL_DOWNLOAD_DIR = path.join(SDKS_DIR, 'download');
 
 const MAC_DEPLOYMENT_TARGET = '10.13';
 const IOS_DEPLOYMENT_TARGET = '12.4';
+const XROS_DEPLOYMENT_TARGET = '1.0';
 
 const validateHermesFrameworksExist = (destrootDir: string) => {
   if (
@@ -248,6 +249,7 @@ const buildHermesIosArtifactAsync = async (buildType: HermesBuildType) => {
       PATH: process.env.PATH,
       MAC_DEPLOYMENT_TARGET,
       IOS_DEPLOYMENT_TARGET,
+      XROS_DEPLOYMENT_TARGET,
     },
   });
 
@@ -262,6 +264,7 @@ const buildHermesIosArtifactAsync = async (buildType: HermesBuildType) => {
       PATH: process.env.PATH,
       MAC_DEPLOYMENT_TARGET,
       IOS_DEPLOYMENT_TARGET,
+      XROS_DEPLOYMENT_TARGET,
     },
   });
 
