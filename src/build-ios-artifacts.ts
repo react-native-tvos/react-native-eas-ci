@@ -50,7 +50,7 @@ const HERMES_SOURCE_BASE_URL = 'https://github.com/facebook/hermes';
 const HERMES_TARBALL_DOWNLOAD_DIR = path.join(SDKS_DIR, 'download');
 
 const MAC_DEPLOYMENT_TARGET = '10.13';
-const IOS_DEPLOYMENT_TARGET = '12.4';
+const IOS_DEPLOYMENT_TARGET = '15.1';
 const XROS_DEPLOYMENT_TARGET = '1.0';
 
 const validateHermesFrameworksExist = (destrootDir: string) => {
@@ -173,7 +173,10 @@ const createHermesDSYMArchivesAsync = async (
   );
 };
 
-const buildHermesIosArtifactAsync = async (buildType: HermesBuildType) => {
+const buildHermesIosArtifactAsync = async (
+  buildType: HermesBuildType,
+  releaseVersion: string,
+) => {
   // Step 1: Clean and prepare directories
 
   await recreateDirectoryAsync(path.join(packagePath, 'sdks', 'hermes'));
@@ -250,6 +253,7 @@ const buildHermesIosArtifactAsync = async (buildType: HermesBuildType) => {
       MAC_DEPLOYMENT_TARGET,
       IOS_DEPLOYMENT_TARGET,
       XROS_DEPLOYMENT_TARGET,
+      HERMES_RELEASE_VERSION: releaseVersion,
     },
   });
 
@@ -265,6 +269,7 @@ const buildHermesIosArtifactAsync = async (buildType: HermesBuildType) => {
       MAC_DEPLOYMENT_TARGET,
       IOS_DEPLOYMENT_TARGET,
       XROS_DEPLOYMENT_TARGET,
+      HERMES_RELEASE_VERSION: releaseVersion,
     },
   });
 
@@ -283,6 +288,9 @@ const buildHermesIosArtifactAsync = async (buildType: HermesBuildType) => {
 };
 
 const executeScriptAsync = async () => {
+  const { isSnapshot, releaseVersion, publishToSonatype } =
+    await getMavenConstantsAsync();
+
   await copyPublishGradleFileAsync();
 
   await recreateDirectoryAsync(HERMES_ARCHIVE_DIR);
@@ -291,7 +299,7 @@ const executeScriptAsync = async () => {
 
   const buildTypes: HermesBuildType[] = ['Debug', 'Release'];
   for (const buildType of buildTypes) {
-    await buildHermesIosArtifactAsync(buildType);
+    await buildHermesIosArtifactAsync(buildType, releaseVersion);
     await fs.cp(
       path.join(HERMES_DSYMS_DEST_DIR, buildType, 'hermes.framework.dSYM'),
       path.join(
@@ -308,9 +316,6 @@ const executeScriptAsync = async () => {
   await runGradlewTaskAsync(
     ':packages:react-native:ReactAndroid:external-artifacts:publishAllPublicationsToMavenTempLocalRepository',
   );
-
-  const { isSnapshot, releaseVersion, publishToSonatype } =
-    await getMavenConstantsAsync();
 
   if (publishToSonatype) {
     const publishType = isSnapshot ? 'Snapshot' : 'Release';
