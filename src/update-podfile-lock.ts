@@ -20,7 +20,12 @@ const rnTesterPath = path.join(repoPath, 'packages', 'rn-tester');
 async function executeScriptAsync() {
   console.log(`Installing Cocoapods...`);
 
-  await spawnAsync('pod', ['install'], {
+  await spawnAsync('yarn', ['clean-ios'], {
+    cwd: rnTesterPath,
+    stdio: 'inherit',
+  });
+
+  await spawnAsync('yarn', ['setup-ios-hermes'], {
     cwd: rnTesterPath,
     stdio: 'inherit',
   });
