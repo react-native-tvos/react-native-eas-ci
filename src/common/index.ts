@@ -4,5 +4,5 @@ export * from './fileUtils';
 export * from './gradleUtils';
 export * from './monorepoUtils';
 export * from './scmUtils';
-export * from './validationUtils';
+export * from './envValidationUtils';
 export * from './versionUtils';

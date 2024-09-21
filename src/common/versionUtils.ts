@@ -17,7 +17,7 @@ const VERSION_REGEX = /^v?((\d+)\.(\d+)\.(\d+)(?:-(.+))?)$/;
  * - prealpha: 0.0.0-prealpha-20221116
  *
  * - tvrelease: 0.75.1-0
- * - tvprerelease: 0.75.1-0rc1
+ * - tvprerelease: 0.75.1-0rc1, 0.75.1-0test2
  */
 export function parseVersion(versionStr: string, buildType: BuildType) {
   const match = extractMatchIfValid(versionStr);

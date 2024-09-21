@@ -2,7 +2,7 @@
  * Utilities for validating the environment settings
  */
 
-import { repoConstants } from './constants';
+import { boolValueFromString, repoConstants } from './constants';
 
 /*
 These environment variables must always be set:
@@ -30,19 +30,14 @@ const requiredEnvVariables = [
   'REACT_NATIVE_RELEASE_VERSION',
 ];
 
-/**
- * Throw error with a message for each missing env variable
- */
-export const validateEnv = () => {
+const validateEnv = () => {
   const errorMessages: string[] = [];
   for (const name of requiredEnvVariables) {
     if (!(name in process.env)) {
       errorMessages.push(missingEnvironmentErrorMessage(name));
     }
   }
-  if (errorMessages.length > 0) {
-    throw new Error(errorMessages.join('\n'));
-  }
+  return errorMessages;
 };
 
 /**
@@ -57,26 +52,31 @@ export const validateSecrets = (secretNames: string[]) => {
       errorMessages.push(missingSecretErrorMessage(name));
     }
   }
-  if (errorMessages.length > 0) {
-    throw new Error(errorMessages.join('\n'));
-  }
+  return errorMessages;
 };
 
 /**
  * Validate the environment for building Maven artifacts
  */
 export const validateForMaven = () => {
-  validateEnv();
-  const { publishToSonatype } = repoConstants;
-  validateSecrets([
-    'ORG_GRADLE_PROJECT_SIGNING_KEY',
-    'ORG_GRADLE_PROJECT_SIGNING_PWD',
-  ]);
-  if (publishToSonatype) {
-    validateSecrets([
-      'ORG_GRADLE_PROJECT_SONATYPE_USERNAME',
-      'ORG_GRADLE_PROJECT_SONATYPE_PASSWORD',
-    ]);
+  const publishToSonatype = boolValueFromString(
+    process.env.PUBLISH_TO_SONATYPE,
+  );
+  const errorMessages = [
+    ...validateEnv(),
+    ...validateSecrets([
+      'ORG_GRADLE_PROJECT_SIGNING_KEY',
+      'ORG_GRADLE_PROJECT_SIGNING_PWD',
+    ]),
+    ...(publishToSonatype
+      ? validateSecrets([
+          'ORG_GRADLE_PROJECT_SONATYPE_USERNAME',
+          'ORG_GRADLE_PROJECT_SONATYPE_PASSWORD',
+        ])
+      : []),
+  ];
+  if (errorMessages.length > 0) {
+    throw new Error(errorMessages.join('\n'));
   }
 };
 
@@ -84,13 +84,18 @@ export const validateForMaven = () => {
  * Validate the environment for Github operations
  */
 export const validateForGitHub = () => {
-  validateEnv();
-  validateSecrets([
-    'GITHUB_USER',
-    'GITHUB_TOKEN',
-    'GIT_AUTHOR_NAME',
-    'GIT_AUTHOR_EMAIL',
-    'GIT_COMMITTER_NAME',
-    'GIT_COMMITTER_EMAIL',
-  ]);
+  const errorMessages = [
+    ...validateEnv(),
+    ...validateSecrets([
+      'GITHUB_USER',
+      'GITHUB_TOKEN',
+      'GIT_AUTHOR_NAME',
+      'GIT_AUTHOR_EMAIL',
+      'GIT_COMMITTER_NAME',
+      'GIT_COMMITTER_EMAIL',
+    ]),
+  ];
+  if (errorMessages.length > 0) {
+    throw new Error(errorMessages.join('\n'));
+  }
 };

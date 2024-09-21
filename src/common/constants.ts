@@ -5,7 +5,9 @@ import { pathToFileURL } from 'url';
 
 import { RepoConstants, MavenConstants, EasConstants } from './types';
 
-const boolValueFromString: (testString: string) => boolean = (testString) => {
+export const boolValueFromString: (testString: string) => boolean = (
+  testString,
+) => {
   return testString === '1' || testString === 'true' || testString === 'TRUE';
 };
 
