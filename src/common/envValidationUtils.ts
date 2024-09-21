@@ -30,7 +30,7 @@ const requiredEnvVariables = [
   'REACT_NATIVE_RELEASE_VERSION',
 ];
 
-const validateEnv = () => {
+const missingEnvVariables = () => {
   const errorMessages: string[] = [];
   for (const name of requiredEnvVariables) {
     if (!(name in process.env)) {
@@ -40,12 +40,7 @@ const validateEnv = () => {
   return errorMessages;
 };
 
-/**
- * Throw error if any of the passed in secret names are missing from the environment.
- *
- * @param secretNames
- */
-export const validateSecrets = (secretNames: string[]) => {
+export const missingSecrets = (secretNames: string[]) => {
   const errorMessages: string[] = [];
   for (const name of secretNames) {
     if (!(name in process.env)) {
@@ -56,6 +51,16 @@ export const validateSecrets = (secretNames: string[]) => {
 };
 
 /**
+ * Throw error if any required env variables are missing
+ */
+export const validateEnv = () => {
+  const errorMessages = missingEnvVariables();
+  if (errorMessages.length > 0) {
+    throw new Error(errorMessages.join('\n'));
+  }
+};
+
+/**
  * Validate the environment for building Maven artifacts
  */
 export const validateForMaven = () => {
@@ -63,13 +68,13 @@ export const validateForMaven = () => {
     process.env.PUBLISH_TO_SONATYPE,
   );
   const errorMessages = [
-    ...validateEnv(),
-    ...validateSecrets([
+    ...missingEnvVariables(),
+    ...missingSecrets([
       'ORG_GRADLE_PROJECT_SIGNING_KEY',
       'ORG_GRADLE_PROJECT_SIGNING_PWD',
     ]),
     ...(publishToSonatype
-      ? validateSecrets([
+      ? missingSecrets([
           'ORG_GRADLE_PROJECT_SONATYPE_USERNAME',
           'ORG_GRADLE_PROJECT_SONATYPE_PASSWORD',
         ])
@@ -85,8 +90,8 @@ export const validateForMaven = () => {
  */
 export const validateForGitHub = () => {
   const errorMessages = [
-    ...validateEnv(),
-    ...validateSecrets([
+    ...missingEnvVariables(),
+    ...missingSecrets([
       'GITHUB_USER',
       'GITHUB_TOKEN',
       'GIT_AUTHOR_NAME',
