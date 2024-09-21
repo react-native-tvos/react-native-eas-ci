@@ -18,14 +18,17 @@ import {
   readFileFromPathAsync,
   recreateDirectoryAsync,
   runGradlewTaskAsync,
+  validateForMaven,
+  cloneAndInstallBranch,
 } from './common';
 
-const { rnPackagePath: packagePath } = repoConstants;
+const { rnPackagePath, isSnapshot, publishToSonatype, releaseBranch } =
+  repoConstants;
 
 type HermesBuildType = 'Debug' | 'Release';
 
 const HERMES_ARCHIVE_DIR = path.join(
-  packagePath,
+  rnPackagePath,
   'ReactAndroid',
   'external-artifacts',
   'artifacts',
@@ -37,11 +40,11 @@ const HERMES_DSYMS_WORKING_DIR = path.join(
 );
 const HERMES_DSYMS_DEST_DIR = path.join(process.env.TMPDIR, 'hermes', 'dSYM');
 
-const SDKS_DIR = path.resolve(packagePath, 'sdks');
+const SDKS_DIR = path.resolve(rnPackagePath, 'sdks');
 const HERMES_DIR = path.join(SDKS_DIR, 'hermes');
 const HERMES_TAG_FILE_PATH = path.join(SDKS_DIR, '.hermesversion');
 const HERMES_PATCH_FILE_PATH = path.join(
-  packagePath,
+  rnPackagePath,
   'scripts',
   'hermes',
   'hermes.patch',
@@ -179,8 +182,8 @@ const buildHermesIosArtifactAsync = async (
 ) => {
   // Step 1: Clean and prepare directories
 
-  await recreateDirectoryAsync(path.join(packagePath, 'sdks', 'hermes'));
-  await recreateDirectoryAsync(path.join(packagePath, 'sdks', 'download'));
+  await recreateDirectoryAsync(path.join(rnPackagePath, 'sdks', 'hermes'));
+  await recreateDirectoryAsync(path.join(rnPackagePath, 'sdks', 'download'));
 
   const hermesVersionTag = await readFileFromPathAsync(HERMES_TAG_FILE_PATH);
   const hermesVersionSHAPipe = await spawnAsync(
@@ -288,8 +291,11 @@ const buildHermesIosArtifactAsync = async (
 };
 
 const executeScriptAsync = async () => {
-  const { isSnapshot, releaseVersion, publishToSonatype } =
-    await getMavenConstantsAsync();
+  validateForMaven();
+
+  cloneAndInstallBranch(releaseBranch);
+
+  const { releaseVersion } = await getMavenConstantsAsync();
 
   await copyPublishGradleFileAsync();
 
@@ -303,7 +309,7 @@ const executeScriptAsync = async () => {
     await fs.cp(
       path.join(HERMES_DSYMS_DEST_DIR, buildType, 'hermes.framework.dSYM'),
       path.join(
-        packagePath,
+        rnPackagePath,
         'ReactAndroid',
         'external-artifacts',
         'artifacts',

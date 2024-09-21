@@ -1,5 +1,9 @@
 import { BuildStepContext, BuildStepEnv } from '@expo/steps';
 import spawn from '@expo/spawn-async';
+import { promises as fs } from 'fs';
+import path from 'path';
+import spawnAsync from '@expo/spawn-async';
+import { tmpdir } from 'os';
 
 /**
  * Installs the Java SDK for iOS build runners.
@@ -12,6 +16,11 @@ async function installCmake(
     env: BuildStepEnv;
   },
 ) {
+  if (env.EAS_BUILD_PLATFORM === 'ios') {
+    ctx.logger.info('Seeing if a simple atomic c++ program compiles...');
+    await testCplusCompileForIos();
+    ctx.logger.info('Success.');
+  }
   if (env.EAS_BUILD_RUNNER !== 'eas-build') {
     ctx.logger.info(
       'We are not running in an EAS build environment, so no install is needed... Exiting.',
@@ -65,6 +74,25 @@ async function installCmakeForIos(
     stdio: 'inherit',
   });
   ctx.logger.info('Done.');
+}
+
+async function testCplusCompileForIos() {
+  const testProgram = `
+#include <atomic>
+std::atomic<int> x;
+int main() {
+  return x;
+}
+  `;
+  const tempDirPath = await fs.mkdtemp(path.join(tmpdir(), 'test-'), {
+    encoding: 'utf-8',
+  });
+  const testProgramPath = path.join(tempDirPath, 'test.cpp');
+  await fs.writeFile(testProgramPath, testProgram, { encoding: 'utf-8' });
+  await spawnAsync('c++', [testProgramPath], {
+    cwd: tempDirPath,
+    stdio: 'inherit',
+  });
 }
 
 export default installCmake;

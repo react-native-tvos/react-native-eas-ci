@@ -21,9 +21,17 @@ import {
   getPackages,
   ProjectInfo,
   unpackTarArchiveAsync,
+  validateForMaven,
+  cloneAndInstallBranch,
 } from './common';
 
-const { repoName, repoPath, rnPackagePath } = repoConstants;
+const {
+  repoName,
+  releaseBranch,
+  rnPackagePath,
+  isSnapshot,
+  publishToSonatype,
+} = repoConstants;
 const { buildDir } = easConstants;
 
 export const validateAndroidArtifactsAsync = async (releaseVersion: string) => {
@@ -58,6 +66,10 @@ export const validateAndroidArtifactsAsync = async (releaseVersion: string) => {
 };
 
 const executeScriptAsync = async function () {
+  validateForMaven();
+
+  cloneAndInstallBranch(releaseBranch);
+
   await copyPublishGradleFileAsync();
 
   const HERMES_INSTALL_LOCATION = path.resolve(rnPackagePath, 'sdks');
@@ -154,8 +166,7 @@ const executeScriptAsync = async function () {
   await runGradlewTaskAsync('publishAllToMavenTempLocal');
   echo('Generated artifacts for Maven');
 
-  const { isSnapshot, releaseVersion, publishToSonatype } =
-    await getMavenConstantsAsync();
+  const { releaseVersion } = await getMavenConstantsAsync();
 
   const publishType = isSnapshot ? 'Snapshot' : 'Release';
 

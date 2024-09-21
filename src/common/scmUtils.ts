@@ -11,10 +11,12 @@
 'use strict';
 
 import spawnAsync from '@expo/spawn-async';
+import { echo, test } from 'shelljs';
 
 import { repoConstants } from './constants';
+import { unpackTarArchiveAsync } from './fileUtils';
 
-const { repoPath, repoUrl } = repoConstants;
+const { repoPath, repoName, repoUrl } = repoConstants;
 
 export async function getBranchName() /*: string */ {
   const result = await spawnAsync(
@@ -91,4 +93,29 @@ export async function pushBranch(branchName?: string) {
     stdio: 'inherit',
     cwd: repoPath,
   });
+}
+
+export async function cloneAndInstallBranch(branchName: string) {
+  const sourceTarballPath = `${repoPath}.tar.gz`;
+  echo(`Checking if ${sourceTarballPath} exists...`);
+  if (test('-e', sourceTarballPath)) {
+    echo(`Unpacking supplied RN archive at ${sourceTarballPath}...`);
+    await unpackTarArchiveAsync(sourceTarballPath, '.');
+  } else {
+    echo(`Clone ${repoName}...`);
+    await spawnAsync(
+      'git',
+      ['clone', '--single-branch', '--no-tags', repoUrl, '-b', branchName],
+      {
+        cwd: '.',
+        stdio: 'inherit',
+      },
+    );
+  }
+  echo('Installing RN dependencies...');
+  await spawnAsync('yarn', [], {
+    cwd: repoPath,
+    stdio: 'inherit',
+  });
+  echo('Done.');
 }

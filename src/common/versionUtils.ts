@@ -42,7 +42,10 @@ export function baseCoreVersionStringForTV(versionStr: string) {
   const versionInfo = parseVersion(versionStr, 'tvrelease');
   return versionToString({
     ...versionInfo,
-    prerelease: isTVTestRelease(versionInfo) ? 'rc.0' : null,
+    prerelease:
+      isTVPrerelease(versionInfo) || isTVTestRelease(versionInfo)
+        ? 'rc.0'
+        : null,
   });
 }
 

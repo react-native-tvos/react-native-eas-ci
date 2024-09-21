@@ -41,11 +41,11 @@ yarn
 # Initialize EAS project settings (add EAS project ID and owner to app.json)
 eas init
 # Build iOS Hermes artifact (react-native-artifacts) (requires Mac M1/M2 runner)
-eas build -e maven_ios_artifacts_tv_snapshot_test -p ios
+eas build -e maven_ios_artifacts -p ios
 # Build Android artifacts (react-android, hermes-android)
-eas build -e maven_android_artifacts_tv_snapshot_test -p <ios|android>
+eas build -e maven_android_artifacts -p <ios|android>
 # Run JS unit tests (can be run on ios or android runner)
-eas build -e run_unit_tests_tv -p <ios|android>
+eas build -e run_unit_tests -p <ios|android>
 ```
 
 ### Project design and structure
@@ -56,31 +56,31 @@ eas build -e run_unit_tests_tv -p <ios|android>
 
 ### Build profiles in this repo
 
-`maven_ios_artifacts_tv_snapshot_test`:
+`maven_ios_artifacts:
 
-Builds the `react-native-artifacts` artifact for the React Native TV repo as a Maven snapshot.
+Builds the `react-native-artifacts` artifact for the React Native TV repo. The repo defined by `REACT_NATIVE_REPO_URL` is cloned from branch `REACT_NATIVE_RELEASE_BRANCH`, and the artifacts are then built using that clone.
 
 Building the iOS artifacts requires an iOS (M1 or M2 Mac) build runner with Java, cmake, and the Android SDK and build tools installed. These installations are done by the `installCmake`, `installJava` and `installAndroidSDK` custom functions.
 
 Android SDK installation requires that licenses be accepted by the installer. This repo follows Android's recommendations for doing this in a CI environment, by making a gzipped tar archive of the `licenses` folder from your Android SDK location (this has all the licenses that have been accepted already). The archive should be uploaded to the `ANDROID_SDK_LICENSES` secret file in EAS.
 
-`maven_android_artifacts_tv_snapshot_test`:
+`maven_android_artifacts`:
 
-Builds the `react-android` and `hermes-android` artifacts for the React Native TV repo as a Maven snapshot.
+Builds the `react-android` and `hermes-android` artifacts for the React Native TV repo. The repo defined by `REACT_NATIVE_REPO_URL` is cloned from branch `REACT_NATIVE_RELEASE_BRANCH`, and the artifacts are then built using that clone.
 
 Building the Android artifacts can be done on either an Android (Linux) build runner or an iOS (M1 or M2 Mac) runner. For M1/M2 runners, the same custom functions listed above are required. Linux runners already have Android SDK and Java installed, so the `installJava` and `installAndroidSDK` custom functions are not needed (and are noops on these runners). The `installCmake` function is still required, as Cmake and Ninja are not installed by default on Linux runners.
 
-`run_unit_tests_tv`, `run_unit_tests_core`:
+`run_unit_tests`:
 
-These profiles clone and install the React Native repo, and then simply run the top level script in the React Native repo (`scripts/run-ci-javascript-tests.js`) to run eslint, flow, codegen, Jest, and tslint tests. The text output of all the tests is uploaded as the build artifact for this profile. This profile can be run on either iOS or Android build runners. No custom functions are required for this profile.
+This profile clones and installs the React Native repo at `REACT_NATIVE_REPO_URL` from branch `REACT_NATIVE_REPO_BRANCH`, and then simply follows the same flow as the top level script in the React Native repo (`scripts/run-ci-javascript-tests.js`) to run eslint, flow, codegen, Jest, and tslint tests. The text output of all the tests is uploaded as the build artifact for this profile. This profile can be run on either iOS or Android build runners. No custom functions are required for this profile.
 
-`print_settings`:
+`cut_release_branch`:
 
-This is a profile that runs very quickly and outputs the environment variables created by `setup-env.sh` (minus secrets). This is useful for debugging changes to the scripts before running more time-consuming build profiles.
+This profile clones `REACT_NATIVE_REPO_URL` from branch `REACT_NATIVE_REPO_BRANCH`, creates a new branch `REACT_NATIVE_RELEASE_BRANCH`, then bumps the React Native version to `REACT_NATIVE_RELEASE_VERSION` and commits the changes. If `PUSH_RELEASE_TO_REPO` is true, changes will be pushed to the repo.
 
-`maven_android_artifacts_tv_release`, `maven_ios_artifacts_tv_release`:
+`update_podfile_lock`:
 
-These profiles are used to create release artifacts for the RNTV repo and publish them to Sonatype. They will only work for RNTV maintainers who have the correct signing and Sonatype credentials.
+This profile should only be run after Maven artifacts for `REACT_NATIVE_RELEASE_VERSION` have been published. It clones `REACT_NATIVE_REPO_URL` from branch `REACT_NATIVE_REPO_BRANCH`, executes `pod install` in the `rn-tester` project of the monorepo, and then commits the `Podfile.lock` changes. If `PUSH_RELEASE_TO_REPO` is true, changes will be pushed to the repo.
 
 ### Building React Native artifacts
 
@@ -106,54 +106,40 @@ In order to be published to Sonatype Maven, artifact builds must be signed with 
 
 See [Sonatype documentation](https://help.sonatype.com/en/iq-server-user-tokens.html#user-token-from-the-server-ui) for how to generate the Sonatype API username and password. Once generated, these must then be uploaded to EAS as secret strings `ORG_GRADLE_PROJECT_SONATYPE_USERNAME` and `ORG_GRADLE_PROJECT_SONATYPE_PASSWORD`.
 
-### Adding a new custom build
+### Environment variable requirements
 
-Any new build profile added must meet these requirements:
+- Required for all profiles:
 
-- Set the required environment variables in the build profile:
+  - String `REACT_NATIVE_REPO_URL` (e.g. https://github.com/react-native-tvos/react-native-tvos or https://github.com/facebook/react-native)
+  - String `REACT_NATIVE_REPO_BRANCH` (e.g. main, 0.74-stable, doug/ci)
+  - String `REACT_NATIVE_RELEASE_BRANCH` (e.g. release-0.75.2-0, release-0.76.0-0rc0)
+  - String `REACT_NATIVE_RELEASE_VERSION` (e.g. 0.75.2, 0.75.2-0, 0.76.0-0rc0)
 
-  - `REACT_NATIVE_REPO_URL` (e.g. https://github.com/react-native-tvos/react-native-tvos or https://github.com/facebook/react-native)
-  - `REACT_NATIVE_REPO_BRANCH` (e.g. main, 0.74-stable, doug/ci)
+- Required for `maven_android_artifacts`, `maven_ios_artifacts`:
 
-- Set optional environment variables in the build profile:
-
-  - `IS_SNAPSHOT` (if true, Maven artifacts are created as snapshots instead of release artifacts)
-  - `PUBLISH_TO_SONATYPE` (if true, Maven artifacts are published to the snapshot or staging repository in Sonatype)
-
-- Set required secrets in EAS:
-
-  - GPG signing (if building Maven artifacts):
+  - GPG signing:
     - String `ORG_GRADLE_PROJECT_SIGNING_KEY`
     - String `ORG_GRADLE_PROJECT_SIGNING_PWD`
   - Android licenses (if installing Android SDK on an iOS M1/M2 runner):
-    - File `ANDROID_SDK_LICENSES`
+    - Secret file `ANDROID_SDK_LICENSES`
   - Sonatype API username/password (if publishing to Sonatype):
     - String `ORG_GRADLE_PROJECT_SONATYPE_USERNAME`
     - String `ORG_GRADLE_PROJECT_SONATYPE_PASSWORD`
 
-### Adding a new build configuration
+- Optional for `maven_android_artifacts`, `maven_ios_artifacts`:
 
-Any new build configuration (one of the YAML files in [./.eas/build](./.eas/build)) must add some required build steps before running any CI on a React Native repo:
+  - String `IS_SNAPSHOT` (if "true", Maven artifacts are created as snapshots instead of release artifacts)
+  - String `PUBLISH_TO_SONATYPE` (if "true", Maven artifacts are published to the snapshot or staging repository in Sonatype)
 
-- Check out this repo
-- Validate that the required environment variables are set in the EAS profile and in EAS secrets
-- NPM install the repo
-  - The `postinstall` step in this repo builds the `installCmake`, `installJava` and `installAndroidSDK` custom functions
-- Clone the React Native repo from the specified URL branch
-- Execute NPM install on React Native
+- Required for `cut_release_branch`, `update-podfile-lock`:
 
-```yaml
-build:
-  name: Any RNTV custom build
-  steps:
-    - eas/checkout
-    - eas/install_node_modules
-    - run:
-        name: Validate environment settings
-        command: |
-          ./src/validate-env.ts
-    - run:
-        name: Clone React Native and install dependencies
-        command: |
-          ./src/clone-and-install-deps.ts
-```
+  - String `GITHUB_USER`
+  - Secret string `GITHUB_TOKEN` (should be a secret environment variable)
+  - String `GIT_AUTHOR_NAME`
+  - String `GIT_AUTHOR_EMAIL`
+  - String `GIT_COMMITTER_NAME`
+  - String `GIT_COMMITTER_EMAIL`
+
+- Optional for `cut_release_branch`, `update_podfile_lock`:
+
+  - String `PUSH_RELEASE_TO_REPO` (If "true", repo changes will actually be pushed)

@@ -3,17 +3,9 @@ build:
   steps:
     - eas/checkout
     - eas/install_node_modules
-    - run:
-        name: Validate environment settings
-        command: |
-          ./src/validate-env.ts
     - install_cmake
     - install_java
     - install_android_sdk
-    - run:
-        name: Clone React Native and install dependencies
-        command: |
-          ./src/clone-and-install-deps.ts
     - run:
         name: Build React Native Android Maven artifacts
         command: |

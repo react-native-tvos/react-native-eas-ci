@@ -5,6 +5,11 @@ export type RepoConstants = {
   repoPath: string;
   repoUrl: string;
   repoBranch: string;
+  releaseBranch: string;
+  releaseVersion: string;
+  isSnapshot: boolean;
+  publishToSonatype: boolean;
+  pushReleaseToRepo: boolean;
 };
 
 export type MavenConstants = {
@@ -12,10 +17,7 @@ export type MavenConstants = {
   mavenArtifactsPath: string;
   mavenLocalPath: string;
   mavenLocalUrl: string;
-  isSnapshot: boolean;
   releaseVersion: string;
-  publishToSonatype: boolean;
-  pushReleaseToRepo: boolean;
 };
 
 export type EasConstants = {

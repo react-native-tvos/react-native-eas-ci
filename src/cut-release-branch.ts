@@ -18,10 +18,18 @@ import {
   updatePackageJson,
   applyPackageVersions,
   pushBranch,
-  getMavenConstantsAsync,
+  validateForGitHub,
+  cloneAndInstallBranch,
 } from './common';
 
-const { repoPath, rnPackagePath } = repoConstants;
+const {
+  repoPath,
+  repoBranch,
+  rnPackagePath,
+  pushReleaseToRepo,
+  releaseBranch,
+  releaseVersion,
+} = repoConstants;
 
 const GRADLE_FILE_PATH = path.join(
   rnPackagePath,
@@ -30,13 +38,12 @@ const GRADLE_FILE_PATH = path.join(
 );
 const REACT_NATIVE_PACKAGE_JSON = path.join(rnPackagePath, 'package.json');
 
-const REACT_NATIVE_RELEASE_VERSION = process.env.REACT_NATIVE_RELEASE_VERSION;
-
 async function executeScriptAsync() {
-  if (!REACT_NATIVE_RELEASE_VERSION) {
-    throw new Error('REACT_NATIVE_RELEASE_VERSION is not defined');
-  }
-  const versionInfo = parseVersion(REACT_NATIVE_RELEASE_VERSION, 'tvrelease');
+  validateForGitHub();
+
+  cloneAndInstallBranch(repoBranch);
+
+  const versionInfo = parseVersion(releaseVersion, 'tvrelease');
 
   console.log(`Updating React Native version to ${versionInfo.version}...`);
 
@@ -56,9 +63,7 @@ async function executeScriptAsync() {
     stdio: 'inherit',
   });
 
-  const releaseBranch = `release-${REACT_NATIVE_RELEASE_VERSION}`;
-
-  const commitMessage = `Bump version number (${REACT_NATIVE_RELEASE_VERSION})`;
+  const commitMessage = `Bump version number (${releaseVersion})`;
 
   const latestCommitBeforeRelease = await getCurrentCommit();
   const branchBeforeRelease = await getBranchName();
@@ -73,8 +78,6 @@ async function executeScriptAsync() {
   const branchAfterRelease = await getBranchName();
   console.log(`Branch = ${branchAfterRelease}`);
   console.log(`Latest commit = ${latestCommitAfterRelease}`);
-
-  const { pushReleaseToRepo } = await getMavenConstantsAsync();
 
   if (pushReleaseToRepo) {
     await pushBranch(releaseBranch);

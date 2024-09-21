@@ -7,9 +7,14 @@ import path from 'path';
 import { promises as fs } from 'fs';
 import spawnAsync, { SpawnResult } from '@expo/spawn-async';
 
-import { repoConstants, easConstants } from './common';
+import {
+  repoConstants,
+  easConstants,
+  validateEnv,
+  cloneAndInstallBranch,
+} from './common';
 
-const { repoPath } = repoConstants;
+const { repoPath, repoBranch } = repoConstants;
 const { buildDir } = easConstants;
 
 const testResultsPath = path.join(buildDir, 'unit-tests.log');
@@ -74,6 +79,10 @@ async function rewriteReactNativePackageNameAsync() {
 }
 
 const executeScriptAsync: () => Promise<void> = async () => {
+  validateEnv();
+
+  cloneAndInstallBranch(repoBranch);
+
   echo('Executing JavaScript tests');
 
   echo('Rewrite react-native package name...');

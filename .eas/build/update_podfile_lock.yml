@@ -4,14 +4,6 @@ build:
     - eas/checkout
     - eas/install_node_modules
     - run:
-        name: Validate environment settings
-        command: |
-          ./src/validate-env.ts
-    - run:
-        name: Clone React Native and install dependencies
-        command: |
-          ./src/clone-and-install-deps.ts
-    - run:
         name: Update Podfile.lock and push to branch
         command: |
           ./src/update-podfile-lock.ts

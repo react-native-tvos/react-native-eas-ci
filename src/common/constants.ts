@@ -14,9 +14,13 @@ const sourceDir = path.resolve(buildDir, 'src');
 const buildRunner = process.env.EAS_BUILD_RUNNER ?? '';
 const buildPlatform = process.env.EAS_BUILD_PLATFORM ?? '';
 const isBuildLocal = buildRunner !== 'eas-build';
-
+const isSnapshot = boolValueFromString(process.env.IS_SNAPSHOT);
+const publishToSonatype = boolValueFromString(process.env.PUBLISH_TO_SONATYPE);
+const pushReleaseToRepo = boolValueFromString(process.env.PUSH_RELEASE_TO_REPO);
 const repoUrl = process.env.REACT_NATIVE_REPO_URL ?? '';
 const repoBranch = process.env.REACT_NATIVE_REPO_BRANCH ?? '';
+const releaseBranch = process.env.REACT_NATIVE_RELEASE_BRANCH ?? '';
+const releaseVersion = process.env.REACT_NATIVE_RELEASE_VERSION ?? '';
 const repoName = path.basename(repoUrl);
 const repoPath = path.join(buildDir, repoName);
 const rnPackagePath = path.join(repoPath, 'packages', 'react-native');
@@ -26,9 +30,14 @@ export const repoConstants: RepoConstants = {
   repoUrl,
   repoName,
   repoBranch,
+  releaseBranch,
+  releaseVersion,
   rnPackagePath,
   vlPackagePath,
   repoPath,
+  isSnapshot,
+  publishToSonatype,
+  pushReleaseToRepo,
 };
 
 export const easConstants: EasConstants = {
@@ -42,7 +51,7 @@ export const easConstants: EasConstants = {
 export const getMavenConstantsAsync: () => Promise<MavenConstants> =
   async () => {
     const { repoPath, rnPackagePath: packagePath } = repoConstants;
-    const isSnapshot = boolValueFromString(process.env.IS_SNAPSHOT);
+
     if (!test('-e', repoPath)) {
       throw new Error('RN repo has not yet been cloned.');
     }
@@ -65,12 +74,6 @@ export const getMavenConstantsAsync: () => Promise<MavenConstants> =
       { encoding: 'utf-8' },
     );
     const releaseVersion = JSON.parse(packageJsonString).version;
-    const publishToSonatype = boolValueFromString(
-      process.env.PUBLISH_TO_SONATYPE,
-    );
-    const pushReleaseToRepo = boolValueFromString(
-      process.env.PUSH_RELEASE_TO_REPO,
-    );
 
     return {
       namespace,
