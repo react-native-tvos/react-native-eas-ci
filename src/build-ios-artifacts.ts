@@ -334,7 +334,12 @@ const executeScriptAsync = async () => {
     echo(
       `${publishType} of react-native-artifacts prepared for version ${releaseVersion}`,
     );
+  } else {
+    console.log(
+      'PUBLISH_TO_SONATYPE is false, artifacts will not be published.',
+    );
   }
+  console.log('Done.');
 };
 
 executeScriptAsync();

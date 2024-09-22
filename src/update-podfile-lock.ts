@@ -14,7 +14,7 @@ import {
   validateForGitHub,
 } from './common';
 
-const { repoPath, releaseBranch, pushReleaseToRepo } = repoConstants;
+const { repoName, repoPath, releaseBranch, pushReleaseToRepo } = repoConstants;
 
 const rnTesterPath = path.join(repoPath, 'packages', 'rn-tester');
 
@@ -51,8 +51,12 @@ async function executeScriptAsync() {
   console.log(`Latest commit = ${latestCommitAfterRelease}`);
 
   if (pushReleaseToRepo) {
+    console.log(`Pushing changes to ${repoName}...`);
     await pushBranchAsync();
+  } else {
+    console.log('PUSH_RELEASE_TO_REPO is false, changes will not be pushed.');
   }
+  console.log('Done.');
 }
 
 executeScriptAsync();

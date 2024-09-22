@@ -25,6 +25,7 @@ import {
 const {
   repoPath,
   repoBranch,
+  repoName,
   rnPackagePath,
   pushReleaseToRepo,
   releaseBranch,
@@ -80,8 +81,12 @@ async function executeScriptAsync() {
   console.log(`Latest commit = ${latestCommitAfterRelease}`);
 
   if (pushReleaseToRepo) {
+    console.log(`Pushing changes to ${repoName}...`);
     await pushBranchAsync(releaseBranch);
+  } else {
+    console.log('PUSH_RELEASE_TO_REPO is false, changes will not be pushed.');
   }
+  console.log('Done.');
 }
 
 async function setReactNativeVersion(

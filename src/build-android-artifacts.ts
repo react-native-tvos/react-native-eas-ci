@@ -196,7 +196,12 @@ const executeScriptAsync = async function () {
     echo(
       `${publishType} of react-android prepared for version ${releaseVersion}`,
     );
+  } else {
+    console.log(
+      'PUBLISH_TO_SONATYPE is false, artifacts will not be published.',
+    );
   }
+  console.log('Done.');
 };
 
 executeScriptAsync();
