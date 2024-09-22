@@ -36,7 +36,7 @@ export async function getPackages(filter: PackagesFilter) {
           ? []
           : ['packages/react-native/package.json'],
       })
-      .map(parsePackageInfo),
+      .map(parsePackageInfoAsync),
   );
 
   return Object.fromEntries(
@@ -49,15 +49,15 @@ export async function getPackages(filter: PackagesFilter) {
 /**
  * Get the parsed package metadata for the workspace root.
  */
-export async function getWorkspaceRoot() /*: Promise<PackageInfo> */ {
-  const [, packageInfo] = await parsePackageInfo(
+export async function getWorkspaceRootAsync() /*: Promise<PackageInfo> */ {
+  const [, packageInfo] = await parsePackageInfoAsync(
     path.join(repoPath, 'package.json'),
   );
 
   return packageInfo;
 }
 
-async function parsePackageInfo(
+async function parsePackageInfoAsync(
   packageJsonPath: string,
 ) /*: Promise<[string, PackageInfo]> */ {
   const packagePath = path.dirname(packageJsonPath);
@@ -79,7 +79,7 @@ async function parsePackageInfo(
 /**
  * Update a given package with the package versions.
  */
-export async function updatePackageJson(
+export async function updatePackageJsonAsync(
   packagePath: string,
   packageJson: PackageJSON,
   newPackageVersions: { [key: string]: string },
@@ -114,7 +114,7 @@ export async function updatePackageJson(
     }
   }
 
-  return await writePackageJson(
+  return await writePackageJsonAsync(
     path.join(packagePath, 'package.json'),
     packageJson,
   );
@@ -123,7 +123,7 @@ export async function updatePackageJson(
 /**
  * Write a `package.json` file to disk.
  */
-async function writePackageJson(
+async function writePackageJsonAsync(
   packageJsonPath: string,
   packageJson: PackageJSON,
 ) /*: Promise<void> */ {

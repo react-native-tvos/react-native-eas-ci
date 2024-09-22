@@ -7,12 +7,10 @@ import spawnAsync from '@expo/spawn-async';
 
 import {
   repoConstants,
-  cloneAndInstallBranch,
-  commitChanges,
-  getCurrentCommit,
-  pushBranch,
-  getMavenConstantsAsync,
-  validateForMaven,
+  cloneAndInstallBranchAsync,
+  commitChangesAsync,
+  getCurrentCommitAsync,
+  pushBranchAsync,
   validateForGitHub,
 } from './common';
 
@@ -23,7 +21,7 @@ const rnTesterPath = path.join(repoPath, 'packages', 'rn-tester');
 async function executeScriptAsync() {
   validateForGitHub();
 
-  cloneAndInstallBranch(releaseBranch);
+  await cloneAndInstallBranchAsync(releaseBranch);
 
   console.log(`Installing Cocoapods...`);
 
@@ -44,16 +42,16 @@ async function executeScriptAsync() {
     stdio: 'inherit',
   });
 
-  const latestCommitBeforeRelease = await getCurrentCommit();
+  const latestCommitBeforeRelease = await getCurrentCommitAsync();
   console.log(`Latest commit = ${latestCommitBeforeRelease}`);
 
-  await commitChanges('Update Podfile.lock');
+  await commitChangesAsync('Update Podfile.lock');
 
-  const latestCommitAfterRelease = await getCurrentCommit();
+  const latestCommitAfterRelease = await getCurrentCommitAsync();
   console.log(`Latest commit = ${latestCommitAfterRelease}`);
 
   if (pushReleaseToRepo) {
-    await pushBranch();
+    await pushBranchAsync();
   }
 }
 

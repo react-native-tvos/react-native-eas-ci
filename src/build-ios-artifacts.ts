@@ -19,7 +19,7 @@ import {
   recreateDirectoryAsync,
   runGradlewTaskAsync,
   validateForMaven,
-  cloneAndInstallBranch,
+  cloneAndInstallBranchAsync,
 } from './common';
 
 const { rnPackagePath, isSnapshot, publishToSonatype, releaseBranch } =
@@ -293,7 +293,7 @@ const buildHermesIosArtifactAsync = async (
 const executeScriptAsync = async () => {
   validateForMaven();
 
-  cloneAndInstallBranch(releaseBranch);
+  await cloneAndInstallBranchAsync(releaseBranch);
 
   const { releaseVersion } = await getMavenConstantsAsync();
 

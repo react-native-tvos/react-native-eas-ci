@@ -10,16 +10,16 @@ import {
   parseVersion,
   repoConstants,
   Version,
-  commitChanges,
-  createNewBranch,
-  getBranchName,
-  getCurrentCommit,
+  commitChangesAsync,
+  createNewBranchAsync,
+  getBranchNameAsync,
+  getCurrentCommitAsync,
   getPackages,
-  updatePackageJson,
+  updatePackageJsonAsync,
   applyPackageVersions,
-  pushBranch,
+  pushBranchAsync,
   validateForGitHub,
-  cloneAndInstallBranch,
+  cloneAndInstallBranchAsync,
 } from './common';
 
 const {
@@ -41,7 +41,7 @@ const REACT_NATIVE_PACKAGE_JSON = path.join(rnPackagePath, 'package.json');
 async function executeScriptAsync() {
   validateForGitHub();
 
-  cloneAndInstallBranch(repoBranch);
+  await cloneAndInstallBranchAsync(repoBranch);
 
   const versionInfo = parseVersion(releaseVersion, 'tvrelease');
 
@@ -65,22 +65,22 @@ async function executeScriptAsync() {
 
   const commitMessage = `Bump version number (${releaseVersion})`;
 
-  const latestCommitBeforeRelease = await getCurrentCommit();
-  const branchBeforeRelease = await getBranchName();
+  const latestCommitBeforeRelease = await getCurrentCommitAsync();
+  const branchBeforeRelease = await getBranchNameAsync();
   console.log(`Branch = ${branchBeforeRelease}`);
   console.log(`Latest commit = ${latestCommitBeforeRelease}`);
 
-  await createNewBranch(releaseBranch);
+  await createNewBranchAsync(releaseBranch);
 
-  await commitChanges(commitMessage);
+  await commitChangesAsync(commitMessage);
 
-  const latestCommitAfterRelease = await getCurrentCommit();
-  const branchAfterRelease = await getBranchName();
+  const latestCommitAfterRelease = await getCurrentCommitAsync();
+  const branchAfterRelease = await getBranchNameAsync();
   console.log(`Branch = ${branchAfterRelease}`);
   console.log(`Latest commit = ${latestCommitAfterRelease}`);
 
   if (pushReleaseToRepo) {
-    await pushBranch(releaseBranch);
+    await pushBranchAsync(releaseBranch);
   }
 }
 
@@ -97,7 +97,7 @@ async function setReactNativeVersion(
   });
   for (const packageName in packages) {
     const packageInfo = packages[packageName];
-    await updatePackageJson(packageInfo.path, packageInfo.packageJson, {
+    await updatePackageJsonAsync(packageInfo.path, packageInfo.packageJson, {
       '@react-native/babel-plugin-codegen': versionInfo.version,
       '@react-native/debugger-frontend': versionInfo.version,
       '@react-native/dev-middleware': versionInfo.version,

@@ -10,9 +10,9 @@ import {
 } from './constants';
 
 export const copyPublishGradleFileAsync = async () => {
-  const { rnPackagePath } = repoConstants;
+  const { rnPackagePath, isSnapshot } = repoConstants;
   const { sourceDir } = easConstants;
-  const { isSnapshot, mavenLocalUrl } = await getMavenConstantsAsync();
+  const { mavenLocalUrl } = await getMavenConstantsAsync();
   const publishGradleSrcPath = path.resolve(sourceDir, 'publish.gradle');
   const publishGradleDestPath = path.resolve(
     rnPackagePath,

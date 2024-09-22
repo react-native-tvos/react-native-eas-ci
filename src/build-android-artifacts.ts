@@ -22,7 +22,7 @@ import {
   ProjectInfo,
   unpackTarArchiveAsync,
   validateForMaven,
-  cloneAndInstallBranch,
+  cloneAndInstallBranchAsync,
 } from './common';
 
 const {
@@ -68,7 +68,7 @@ export const validateAndroidArtifactsAsync = async (releaseVersion: string) => {
 const executeScriptAsync = async function () {
   validateForMaven();
 
-  cloneAndInstallBranch(releaseBranch);
+  await cloneAndInstallBranchAsync(releaseBranch);
 
   await copyPublishGradleFileAsync();
 

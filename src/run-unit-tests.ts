@@ -11,7 +11,7 @@ import {
   repoConstants,
   easConstants,
   validateEnv,
-  cloneAndInstallBranch,
+  cloneAndInstallBranchAsync,
 } from './common';
 
 const { repoPath, repoBranch } = repoConstants;
@@ -81,7 +81,7 @@ async function rewriteReactNativePackageNameAsync() {
 const executeScriptAsync: () => Promise<void> = async () => {
   validateEnv();
 
-  cloneAndInstallBranch(repoBranch);
+  await cloneAndInstallBranchAsync(repoBranch);
 
   echo('Executing JavaScript tests');
 

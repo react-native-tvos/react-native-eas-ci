@@ -18,7 +18,7 @@ import { unpackTarArchiveAsync } from './fileUtils';
 
 const { repoPath, repoName, repoUrl } = repoConstants;
 
-export async function getBranchName() /*: string */ {
+export async function getBranchNameAsync() /*: string */ {
   const result = await spawnAsync(
     'git',
     ['rev-parse', '--abbrev-ref', 'HEAD'],
@@ -30,7 +30,7 @@ export async function getBranchName() /*: string */ {
   return result.output[0].trim();
 }
 
-export async function getCurrentCommit() {
+export async function getCurrentCommitAsync() {
   const result = await spawnAsync('git', ['rev-parse', 'HEAD'], {
     stdio: 'pipe',
     cwd: repoPath,
@@ -38,21 +38,21 @@ export async function getCurrentCommit() {
   return result.output[0].trim();
 }
 
-export async function createNewBranch(branchName: string) {
+export async function createNewBranchAsync(branchName: string) {
   await spawnAsync('git', ['checkout', '-b', branchName], {
     stdio: 'inherit',
     cwd: repoPath,
   });
 }
 
-export async function commitChanges(commitMessage: string) {
+export async function commitChangesAsync(commitMessage: string) {
   await spawnAsync('git', ['commit', '-a', '-m', commitMessage], {
     stdio: 'inherit',
     cwd: repoPath,
   });
 }
 
-export async function setCredentials() {
+export async function setCredentialsAsync() {
   if (
     !process.env.GITHUB_USER ||
     !process.env.GITHUB_TOKEN ||
@@ -83,8 +83,8 @@ export async function setCredentials() {
   });
 }
 
-export async function pushBranch(branchName?: string) {
-  await setCredentials();
+export async function pushBranchAsync(branchName?: string) {
+  await setCredentialsAsync();
   // If new branch, add required arguments
   const args = branchName
     ? ['push', '--set-upstream', 'origin', branchName]
@@ -95,14 +95,14 @@ export async function pushBranch(branchName?: string) {
   });
 }
 
-export async function cloneAndInstallBranch(branchName: string) {
+export async function cloneAndInstallBranchAsync(branchName: string) {
   const sourceTarballPath = `${repoPath}.tar.gz`;
   echo(`Checking if ${sourceTarballPath} exists...`);
   if (test('-e', sourceTarballPath)) {
     echo(`Unpacking supplied RN archive at ${sourceTarballPath}...`);
     await unpackTarArchiveAsync(sourceTarballPath, '.');
   } else {
-    echo(`Clone ${repoName}...`);
+    echo(`Clone ${repoName} from ${repoUrl} and ${branchName}...`);
     await spawnAsync(
       'git',
       ['clone', '--single-branch', '--no-tags', repoUrl, '-b', branchName],
