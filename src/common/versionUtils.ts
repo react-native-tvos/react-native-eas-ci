@@ -44,7 +44,7 @@ export function baseCoreVersionStringForTV(versionStr: string) {
     ...versionInfo,
     prerelease:
       isTVPrerelease(versionInfo) || isTVTestRelease(versionInfo)
-        ? 'rc.0'
+        ? 'rc.1'
         : null,
   });
 }
