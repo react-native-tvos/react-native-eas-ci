@@ -3,32 +3,36 @@
     "version": ">= 3.15.1"
   },
   "build": {
-    "maven_android_artifacts": {
+    "base": {
       "resourceClass": "large",
-      "config": "maven_android_artifacts.yml",
+      "android": {
+        "image": "latest"
+      },
+      "ios": {
+        "image": "latest"
+      },
       "withoutCredentials": true,
       "distribution": "internal"
+    },
+    "maven_android_artifacts": {
+      "extends": "base",
+      "config": "maven_android_artifacts.yml"
     },
     "maven_ios_artifacts": {
-      "resourceClass": "large",
-      "config": "maven_ios_artifacts.yml",
-      "withoutCredentials": true,
-      "distribution": "internal"
+      "extends": "base",
+      "config": "maven_ios_artifacts.yml"
     },
     "cut_release_branch": {
-      "config": "cut_release_branch.yml",
-      "withoutCredentials": true,
-      "distribution": "internal"
+      "extends": "base",
+      "config": "cut_release_branch.yml"
     },
     "update_podfile_lock": {
-      "config": "update_podfile_lock.yml",
-      "withoutCredentials": true,
-      "distribution": "internal"
+      "extends": "base",
+      "config": "update_podfile_lock.yml"
     },
     "run_unit_tests": {
-      "config": "run_unit_tests.yml",
-      "withoutCredentials": true,
-      "distribution": "internal"
+      "extends": "base",
+      "config": "run_unit_tests.yml"
     },
     "tvos-0.76.0 unit tests": {
       "extends": "run_unit_tests",
