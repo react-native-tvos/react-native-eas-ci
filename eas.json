@@ -88,7 +88,7 @@
         "REACT_NATIVE_REPO_BRANCH": "tvos-v0.73.0",
         "REACT_NATIVE_RELEASE_BRANCH": "release-0.73.7-2",
         "REACT_NATIVE_RELEASE_VERSION": "0.73.7-2",
-        "PUSH_RELEASE_TO_REPO": "false"
+        "PUSH_RELEASE_TO_REPO": "true"
       }
     },
     "Build iOS artifacts for 0.73.7-2": {
@@ -119,6 +119,56 @@
         "REACT_NATIVE_REPO_BRANCH": "tvos-v0.73.0",
         "REACT_NATIVE_RELEASE_BRANCH": "release-0.73.7-2",
         "REACT_NATIVE_RELEASE_VERSION": "0.73.7-2",
+        "PUBLISH_TO_SONATYPE": "true",
+        "INCLUDE_VISION_OS": "false"
+      }
+    },
+    "tvos-0.75.0 unit tests": {
+      "extends": "run_unit_tests",
+      "env": {
+        "REACT_NATIVE_REPO_URL": "https://github.com/react-native-tvos/react-native-tvos",
+        "REACT_NATIVE_REPO_BRANCH": "tvos-v0.75.0",
+        "REACT_NATIVE_RELEASE_BRANCH": "release-0.75.3-0",
+        "REACT_NATIVE_RELEASE_VERSION": "0.75.3-0"
+      }
+    },
+    "Cut release branch for 0.75.3-0": {
+      "extends": "cut_release_branch",
+      "env": {
+        "REACT_NATIVE_REPO_URL": "https://github.com/react-native-tvos/react-native-tvos",
+        "REACT_NATIVE_REPO_BRANCH": "tvos-v0.75.0",
+        "REACT_NATIVE_RELEASE_BRANCH": "release-0.75.3-0",
+        "REACT_NATIVE_RELEASE_VERSION": "0.75.3-0",
+        "PUSH_RELEASE_TO_REPO": "true"
+      }
+    },
+    "Build iOS artifacts for 0.75.3-0": {
+      "extends": "maven_ios_artifacts",
+      "env": {
+        "REACT_NATIVE_REPO_URL": "https://github.com/react-native-tvos/react-native-tvos",
+        "REACT_NATIVE_REPO_BRANCH": "tvos-v0.75.0",
+        "REACT_NATIVE_RELEASE_BRANCH": "release-0.75.3-0",
+        "REACT_NATIVE_RELEASE_VERSION": "0.75.3-0",
+        "PUBLISH_TO_SONATYPE": "false"
+      }
+    },
+    "Update Podfile.lock for 0.75.3-0": {
+      "extends": "update_podfile_lock",
+      "env": {
+        "REACT_NATIVE_REPO_URL": "https://github.com/react-native-tvos/react-native-tvos",
+        "REACT_NATIVE_REPO_BRANCH": "tvos-v0.75.0",
+        "REACT_NATIVE_RELEASE_BRANCH": "release-0.75.3-0",
+        "REACT_NATIVE_RELEASE_VERSION": "0.75.3-0",
+        "PUSH_RELEASE_TO_REPO": "true"
+      }
+    },
+    "Build Android artifacts for 0.75.3-0": {
+      "extends": "maven_android_artifacts",
+      "env": {
+        "REACT_NATIVE_REPO_URL": "https://github.com/react-native-tvos/react-native-tvos",
+        "REACT_NATIVE_REPO_BRANCH": "tvos-v0.75.0",
+        "REACT_NATIVE_RELEASE_BRANCH": "release-0.75.3-0",
+        "REACT_NATIVE_RELEASE_VERSION": "0.75.3-0",
         "PUBLISH_TO_SONATYPE": "true",
         "INCLUDE_VISION_OS": "false"
       }
