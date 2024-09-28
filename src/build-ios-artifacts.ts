@@ -22,8 +22,13 @@ import {
   cloneAndInstallBranchAsync,
 } from './common';
 
-const { rnPackagePath, isSnapshot, publishToSonatype, releaseBranch } =
-  repoConstants;
+const {
+  rnPackagePath,
+  isSnapshot,
+  publishToSonatype,
+  releaseBranch,
+  includeVisionOS,
+} = repoConstants;
 
 type HermesBuildType = 'Debug' | 'Release';
 
@@ -138,14 +143,15 @@ const createHermesDSYMArchivesAsync = async (
 ) => {
   const WORKING_DIR = path.join(HERMES_DSYMS_WORKING_DIR, hermesBuildType);
   const frameworkTypes = [
-    'macosx',
-    'catalyst',
-    'iphoneos',
-    'iphonesimulator',
-    'appletvos',
-    'appletvsimulator',
-    'xros',
-    'xrsimulator',
+    ...[
+      'macosx',
+      'catalyst',
+      'iphoneos',
+      'iphonesimulator',
+      'appletvos',
+      'appletvsimulator',
+    ],
+    ...(includeVisionOS ? ['xros', 'xrsimulator'] : []),
   ];
   for (const frameworkType of frameworkTypes) {
     await recreateDirectoryAsync(path.join(WORKING_DIR, frameworkType));

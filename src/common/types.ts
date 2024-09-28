@@ -10,6 +10,7 @@ export type RepoConstants = {
   isSnapshot: boolean;
   publishToSonatype: boolean;
   pushReleaseToRepo: boolean;
+  includeVisionOS: boolean;
 };
 
 export type MavenConstants = {

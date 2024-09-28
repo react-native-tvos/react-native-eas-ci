@@ -5,10 +5,13 @@ import { pathToFileURL } from 'url';
 
 import { RepoConstants, MavenConstants, EasConstants } from './types';
 
-export const boolValueFromString: (testString: string) => boolean = (
-  testString,
-) => {
-  return testString === '1' || testString === 'true' || testString === 'TRUE';
+export const boolValueFromString: (
+  testString: string,
+  defaultValue?: boolean,
+) => boolean = (testString, defaultValue) => {
+  return defaultValue === true
+    ? testString !== '0' && testString !== 'false' && testString !== 'FALSE'
+    : testString === '1' || testString === 'true' || testString === 'TRUE';
 };
 
 const buildDir = process.env.EAS_BUILD_WORKINGDIR ?? '.';
@@ -19,6 +22,10 @@ const isBuildLocal = buildRunner !== 'eas-build';
 const isSnapshot = boolValueFromString(process.env.IS_SNAPSHOT);
 const publishToSonatype = boolValueFromString(process.env.PUBLISH_TO_SONATYPE);
 const pushReleaseToRepo = boolValueFromString(process.env.PUSH_RELEASE_TO_REPO);
+const includeVisionOS = boolValueFromString(
+  process.env.INCLUDE_VISION_OS,
+  true,
+);
 const repoUrl = process.env.REACT_NATIVE_REPO_URL ?? '';
 const repoBranch = process.env.REACT_NATIVE_REPO_BRANCH ?? '';
 const releaseBranch = process.env.REACT_NATIVE_RELEASE_BRANCH ?? '';
@@ -40,6 +47,7 @@ export const repoConstants: RepoConstants = {
   isSnapshot,
   publishToSonatype,
   pushReleaseToRepo,
+  includeVisionOS,
 };
 
 export const easConstants: EasConstants = {
