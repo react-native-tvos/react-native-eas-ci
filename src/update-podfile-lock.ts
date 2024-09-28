@@ -8,7 +8,7 @@ import spawnAsync from '@expo/spawn-async';
 import {
   repoConstants,
   cloneAndInstallBranchAsync,
-  commitChangesAsync,
+  commitStagedChangesAsync,
   getCurrentCommitAsync,
   pushBranchAsync,
   validateForGitHub,
@@ -45,7 +45,7 @@ async function executeScriptAsync() {
   const latestCommitBeforeRelease = await getCurrentCommitAsync();
   console.log(`Latest commit = ${latestCommitBeforeRelease}`);
 
-  await commitChangesAsync('Update Podfile.lock');
+  await commitStagedChangesAsync('Update Podfile.lock');
 
   const latestCommitAfterRelease = await getCurrentCommitAsync();
   console.log(`Latest commit = ${latestCommitAfterRelease}`);

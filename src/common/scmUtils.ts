@@ -45,8 +45,15 @@ export async function createNewBranchAsync(branchName: string) {
   });
 }
 
-export async function commitChangesAsync(commitMessage: string) {
+export async function commitAllChangesAsync(commitMessage: string) {
   await spawnAsync('git', ['commit', '-a', '-m', commitMessage], {
+    stdio: 'inherit',
+    cwd: repoPath,
+  });
+}
+
+export async function commitStagedChangesAsync(commitMessage: string) {
+  await spawnAsync('git', ['commit', '-m', commitMessage], {
     stdio: 'inherit',
     cwd: repoPath,
   });

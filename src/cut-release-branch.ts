@@ -10,7 +10,7 @@ import {
   parseVersion,
   repoConstants,
   Version,
-  commitChangesAsync,
+  commitAllChangesAsync,
   createNewBranchAsync,
   getBranchNameAsync,
   getCurrentCommitAsync,
@@ -73,7 +73,7 @@ async function executeScriptAsync() {
 
   await createNewBranchAsync(releaseBranch);
 
-  await commitChangesAsync(commitMessage);
+  await commitAllChangesAsync(commitMessage);
 
   const latestCommitAfterRelease = await getCurrentCommitAsync();
   const branchAfterRelease = await getBranchNameAsync();
