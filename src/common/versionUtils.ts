@@ -44,7 +44,7 @@ export function baseCoreVersionStringForTV(versionStr: string) {
     ...versionInfo,
     prerelease:
       isTVPrerelease(versionInfo) || isTVTestRelease(versionInfo)
-        ? 'rc.1'
+        ? process.env.REACT_NATIVE_TV_CORE_VERSION ?? null
         : null,
   });
 }
