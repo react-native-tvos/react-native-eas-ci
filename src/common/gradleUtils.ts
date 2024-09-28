@@ -64,10 +64,10 @@ export const getGradleEnvAsync: () => Promise<NodeJS.ProcessEnv> = async () => {
   };
 };
 
-export const runGradlewTaskAsync = async (taskName: string) => {
+export const runGradlewTasksAsync = async (taskNames: string[]) => {
   const { repoPath } = repoConstants;
   const env = await getGradleEnvAsync();
-  const gradlewResult = await spawnAsync('./gradlew', [taskName], {
+  const gradlewResult = await spawnAsync('./gradlew', taskNames, {
     cwd: repoPath,
     stdio: 'inherit',
     env,

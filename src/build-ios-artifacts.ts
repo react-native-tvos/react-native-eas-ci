@@ -17,7 +17,7 @@ import {
   repoConstants,
   readFileFromPathAsync,
   recreateDirectoryAsync,
-  runGradlewTaskAsync,
+  runGradlewTasksAsync,
   validateForMaven,
   cloneAndInstallBranchAsync,
 } from './common';
@@ -325,17 +325,18 @@ const executeScriptAsync = async () => {
   }
 
   echo('Publishing react-native-artifacts to Maven local repository...');
-  await runGradlewTaskAsync(
+  await runGradlewTasksAsync([
     ':packages:react-native:ReactAndroid:external-artifacts:publishAllPublicationsToMavenTempLocalRepository',
-  );
+  ]);
 
   if (publishToSonatype) {
     const publishType = isSnapshot ? 'Snapshot' : 'Release';
 
     echo('Publishing react-native-artifacts to Sonatype...');
-    await runGradlewTaskAsync(
-      `:packages:react-native:ReactAndroid:external-artifacts:publishAllPublicationsToSonatype${publishType}`,
-    );
+    await runGradlewTasksAsync([
+      ':packages:react-native:ReactAndroid:external-artifacts:publishToSonatype',
+      'closeAndReleaseSonatypeStagingRepository',
+    ]);
 
     echo(
       `${publishType} of react-native-artifacts prepared for version ${releaseVersion}`,

@@ -13,7 +13,7 @@ import {
   downloadFileAsync,
   easConstants,
   repoConstants,
-  runGradlewTaskAsync,
+  runGradlewTasksAsync,
   recreateDirectoryAsync,
   copyPublishGradleFileAsync,
   getMavenConstantsAsync,
@@ -163,7 +163,7 @@ const executeScriptAsync = async function () {
   }
 
   echo('Generating Android artifacts...');
-  await runGradlewTaskAsync('publishAllToMavenTempLocal');
+  await runGradlewTasksAsync(['publishAllToMavenTempLocal']);
   echo('Generated artifacts for Maven');
 
   const { releaseVersion } = await getMavenConstantsAsync();
@@ -179,22 +179,15 @@ const executeScriptAsync = async function () {
   }
 
   if (publishToSonatype) {
-    echo('Publishing hermes-android to Sonatype...');
-    await runGradlewTaskAsync(
-      `:packages:react-native:ReactAndroid:hermes-engine:publishAllPublicationsToSonatype${publishType}`,
-    );
+    echo('Publishing hermes-android and react-android to Sonatype...');
+    await runGradlewTasksAsync([
+      ':packages:react-native:ReactAndroid:hermes-engine:publishToSonatype',
+      ':packages:react-native:ReactAndroid:publishToSonatype',
+      'closeAndReleaseSonatypeStagingRepository',
+    ]);
 
     echo(
-      `${publishType} of hermes-android prepared for version ${releaseVersion}`,
-    );
-
-    echo('Publishing react-android to Sonatype...');
-    await runGradlewTaskAsync(
-      `:packages:react-native:ReactAndroid:publishAllPublicationsToSonatype${publishType}`,
-    );
-
-    echo(
-      `${publishType} of react-android prepared for version ${releaseVersion}`,
+      `${publishType} of hermes-android and react-android prepared for version ${releaseVersion}`,
     );
   } else {
     console.log(
