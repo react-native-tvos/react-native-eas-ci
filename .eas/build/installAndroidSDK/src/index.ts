@@ -22,16 +22,14 @@ async function installAndroidSDK(
     );
     return;
   }
-  if (env.EAS_BUILD_PLATFORM !== 'ios') {
-    ctx.logger.info(
-      'This custom function is only needed for builds on iOS workers. Done.',
-    );
-    return;
-  }
   // Validate that licenses tar archive exists
   await validateLicensesAsync(env);
-  ctx.logger.info('Installing Android command line tools...');
-  await installAndroidCommandLineToolsFromBrewAsync(env);
+  // Install Android command line tools on iOS
+  if (isIosRunner(env)) {
+    ctx.logger.info('Installing Android command line tools...');
+    await installAndroidCommandLineToolsFromBrewAsync(env);
+  }
+  ctx.logger.info('Run sdkmanager license tool...');
   await androidLicensesAsync(env);
   ctx.logger.info('Installing Android platform tools...');
   await installAndroidDependencyAsync('platform-tools', env);
@@ -69,7 +67,9 @@ async function validateLicensesAsync(env: BuildStepEnv) {
 }
 
 async function androidLicensesAsync(env: BuildStepEnv) {
-  const androidSdkPath = '/opt/homebrew/share/android-commandlinetools';
+  const androidSdkPath = isIosRunner(env)
+    ? '/opt/homebrew/share/android-commandlinetools'
+    : process.env.ANDROID_SDK_ROOT;
   const licensesTarballPath = env.ANDROID_SDK_LICENSES as unknown as string;
 
   await spawn('tar', ['zxf', licensesTarballPath], {
@@ -78,7 +78,12 @@ async function androidLicensesAsync(env: BuildStepEnv) {
   });
   const localEnv = {
     ...env,
-    JAVA_HOME: '/opt/homebrew/opt/openjdk/libexec/openjdk.jdk/Contents/Home',
+    ...(isIosRunner(env)
+      ? {
+          JAVA_HOME:
+            '/opt/homebrew/opt/openjdk/libexec/openjdk.jdk/Contents/Home',
+        }
+      : {}),
   };
   await spawn('sdkmanager', ['--licenses', '--verbose'], {
     env: localEnv,
@@ -92,12 +97,21 @@ async function installAndroidDependencyAsync(
 ) {
   const localEnv = {
     ...env,
-    JAVA_HOME: '/opt/homebrew/opt/openjdk/libexec/openjdk.jdk/Contents/Home',
+    ...(isIosRunner(env)
+      ? {
+          JAVA_HOME:
+            '/opt/homebrew/opt/openjdk/libexec/openjdk.jdk/Contents/Home',
+        }
+      : {}),
   };
   await spawn('sdkmanager', ['--install', dependencyName, '--verbose'], {
     env: localEnv,
     stdio: 'ignore',
   });
+}
+
+function isIosRunner(env: BuildStepEnv): boolean {
+  return env.EAS_BUILD_PLATFORM === 'ios';
 }
 
 export default installAndroidSDK;
