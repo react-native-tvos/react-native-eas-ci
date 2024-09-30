@@ -42,10 +42,7 @@ export function baseCoreVersionStringForTV(versionStr: string) {
   const versionInfo = parseVersion(versionStr, 'tvrelease');
   return versionToString({
     ...versionInfo,
-    prerelease:
-      isTVPrerelease(versionInfo) || isTVTestRelease(versionInfo)
-        ? process.env.REACT_NATIVE_TV_CORE_VERSION ?? null
-        : null,
+    prerelease: null,
   });
 }
 

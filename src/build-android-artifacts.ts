@@ -107,7 +107,12 @@ const executeScriptAsync = async function () {
 
   const reactNativeVersion = packages[repoName].version;
   console.log(`reactNativeVersion = ${reactNativeVersion}`);
-  const reactNativeCoreVersion = baseCoreVersionStringForTV(reactNativeVersion);
+
+  let reactNativeCoreVersion = baseCoreVersionStringForTV(reactNativeVersion);
+  // Override if env variable set
+  if (process.env.REACT_NATIVE_CORE_VERSION?.length) {
+    reactNativeCoreVersion = process.env.REACT_NATIVE_CORE_VERSION;
+  }
   console.log(`reactNativeCoreVersion = ${reactNativeCoreVersion}`);
 
   const REACT_NATIVE_CORE_PATH = path.join(buildDir, 'react-native-core');
