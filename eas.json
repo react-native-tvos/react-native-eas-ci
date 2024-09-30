@@ -61,7 +61,7 @@
         "REACT_NATIVE_REPO_BRANCH": "tvos-v0.76.0",
         "REACT_NATIVE_RELEASE_BRANCH": "release-0.76.0-0rc2",
         "REACT_NATIVE_RELEASE_VERSION": "0.76.0-0rc2",
-        "REACT_NATIVE_TV_CORE_VERSION": "0.76.0-rc.2",
+        "REACT_NATIVE_CORE_VERSION": "0.76.0-rc.2",
         "INCLUDE_VISION_OS": "false",
         "PUBLISH_TO_SONATYPE": "false"
       }
@@ -83,8 +83,8 @@
         "REACT_NATIVE_REPO_BRANCH": "tvos-v0.76.0",
         "REACT_NATIVE_RELEASE_BRANCH": "release-0.76.0-0rc2",
         "REACT_NATIVE_RELEASE_VERSION": "0.76.0-0rc2",
-        "REACT_NATIVE_TV_CORE_VERSION": "0.76.0-rc.2",
-        "PUBLISH_TO_SONATYPE": "true"
+        "REACT_NATIVE_CORE_VERSION": "0.76.0-rc.2",
+        "PUBLISH_TO_SONATYPE": "false"
       }
     }
   }
