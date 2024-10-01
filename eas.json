@@ -51,7 +51,7 @@
         "REACT_NATIVE_REPO_BRANCH": "tvos-v0.76.0",
         "REACT_NATIVE_RELEASE_BRANCH": "release-0.76.0-0rc2",
         "REACT_NATIVE_RELEASE_VERSION": "0.76.0-0rc2",
-        "PUSH_RELEASE_TO_REPO": "true"
+        "PUSH_RELEASE_TO_REPO": "false"
       }
     },
     "Build iOS artifacts for RNTV 0.76.0-0rc2 (no VisionOS)": {
@@ -73,7 +73,7 @@
         "REACT_NATIVE_REPO_BRANCH": "tvos-v0.76.0",
         "REACT_NATIVE_RELEASE_BRANCH": "release-0.76.0-0rc2",
         "REACT_NATIVE_RELEASE_VERSION": "0.76.0-0rc2",
-        "PUSH_RELEASE_TO_REPO": "true"
+        "PUSH_RELEASE_TO_REPO": "false"
       }
     },
     "Build Android artifacts for RNTV 0.76.0-0rc2": {
