@@ -2,7 +2,7 @@
 
 This project is configured to run [EAS custom builds](https://docs.expo.dev/custom-builds/get-started/) for continuous integration of React Native, and is currently configured to do this successfully for the [RNTV (React Native for TV)](https://github.com/react-native-tvos/react-native-tvos) fork of the core repo.
 
-Eventually, the goal is to generalize this project to work on the [RN core repo](https://github.com/facebook/react-native), and also work on repos that support other out-of-tree platforms.
+Some work has also been done to generalize this project to work on the [RN core repo](https://github.com/facebook/react-native), and also work on repos that support other out-of-tree platforms.
 
 Other project goals:
 
@@ -14,17 +14,17 @@ To make this possible, the existing CI code from both the core repo and the TV r
 Already working:
 
 - Create release artifacts for RNTV
+- Create release artifacts for RN core
 - Run JS unit tests for RNTV
 - Run JS unit tests on RN core repo
 - Publish RNTV artifacts to Sonatype
 - Generate RNTV NPM packages for manual publication to NPM
+- Add unit tests for the CI code
 
 Future work:
 
-- Add unit tests for the CI code
 - Run E2E tests for RNTV
 - Publish an RNTV release to NPM
-- Generalize Maven artifact generation and other tasks to work on the RN core repo and other forks
 
 ### Prerequisites
 
@@ -40,12 +40,15 @@ cd react-native-eas-ci
 yarn
 # Initialize EAS project settings (add EAS project ID and owner to app.json)
 eas init
-# Build iOS Hermes artifact (react-native-artifacts) (requires Mac M1/M2 runner)
-eas build -e maven_ios_artifacts -p ios
-# Build Android artifacts (react-android, hermes-android)
-eas build -e maven_android_artifacts -p <ios|android>
+#
+# Try building some profiles that already are known to work
+#
+# Build iOS Hermes artifact for RNTV (requires Mac M1/M2 runner)
+eas build -e "Build iOS artifacts for RNTV 0.76.0-0rc2 (no VisionOS)" -p ios
+# Build Android artifacts (react-android, hermes-android) for RNTV
+eas build -e "Build Android artifacts for RNTV 0.76.0-0rc2" -p <ios|android>
 # Run JS unit tests (can be run on ios or android runner)
-eas build -e run_unit_tests -p <ios|android>
+eas build -e "RNTV tvos-0.76.0 unit tests" -p <ios|android>
 ```
 
 ### Project design and structure
@@ -56,9 +59,11 @@ eas build -e run_unit_tests -p <ios|android>
 
 ### Build profiles in this repo
 
-`maven_ios_artifacts:
+> Every build profile should extend one of the profiles below, adding the right values for the required and optional environment variables.
 
-Builds the `react-native-artifacts` artifact for the React Native TV repo. The repo defined by `REACT_NATIVE_REPO_URL` is cloned from branch `REACT_NATIVE_RELEASE_BRANCH`, and the artifacts are then built using that clone.
+`maven_ios_artifacts`:
+
+Builds the `react-native-artifacts` artifact for a React Native repo. The repo defined by `REACT_NATIVE_REPO_URL` is cloned from branch `REACT_NATIVE_RELEASE_BRANCH`, and the artifacts are then built using that clone.
 
 Building the iOS artifacts requires an iOS (M1 or M2 Mac) build runner with Java, cmake, and the Android SDK and build tools installed. These installations are done by the `installCmake`, `installJava` and `installAndroidSDK` custom functions.
 
@@ -66,9 +71,9 @@ Android SDK installation requires that licenses be accepted by the installer. Th
 
 `maven_android_artifacts`:
 
-Builds the `react-android` and `hermes-android` artifacts for the React Native TV repo. The repo defined by `REACT_NATIVE_REPO_URL` is cloned from branch `REACT_NATIVE_RELEASE_BRANCH`, and the artifacts are then built using that clone.
+Builds the `react-android` and `hermes-android` artifacts for a React Native repo. The repo defined by `REACT_NATIVE_REPO_URL` is cloned from branch `REACT_NATIVE_RELEASE_BRANCH`, and the artifacts are then built using that clone.
 
-Building the Android artifacts can be done on either an Android (Linux) build runner or an iOS (M1 or M2 Mac) runner. For M1/M2 runners, the same custom functions listed above are required. Linux runners already have Android SDK and Java installed, so the `installJava` and `installAndroidSDK` custom functions are not needed (and are noops on these runners). The `installCmake` function is still required, as Cmake and Ninja are not installed by default on Linux runners.
+Building the Android artifacts can be done on either an Android (Linux) build runner or an iOS (M1 or M2 Mac) runner. For M1/M2 runners, the same custom functions listed above are required. Linux runners already have Java installed, so the `installJava` custom function is not needed (and is a noop on these runners). The `installCmake` and `installAndroidSDK` functions are still required, as Cmake and Ninja are not installed by default on Linux runners.
 
 `run_unit_tests`:
 
@@ -117,6 +122,8 @@ See [Sonatype documentation](https://help.sonatype.com/en/iq-server-user-tokens.
 
 - Required for `maven_android_artifacts`, `maven_ios_artifacts`:
 
+  - Core version:
+    - String `REACT_NATIVE_CORE_VERSION` (the core version on which TV releases are based -- for builds on RN core, it should just be equal to `REACT_NATIVE_RELEASE_VERSION`)
   - GPG signing:
     - String `ORG_GRADLE_PROJECT_SIGNING_KEY`
     - String `ORG_GRADLE_PROJECT_SIGNING_PWD`
@@ -130,6 +137,7 @@ See [Sonatype documentation](https://help.sonatype.com/en/iq-server-user-tokens.
 
   - String `IS_SNAPSHOT` (if "true", Maven artifacts are created as snapshots instead of release artifacts)
   - String `PUBLISH_TO_SONATYPE` (if "true", Maven artifacts are published to the snapshot or staging repository in Sonatype)
+  - String `INCLUDE_VISION_OS` (if "false", Vision OS frameworks are omitted from the Apple Hermes artifacts. This option should only be used in RNTV builds, not in RN core builds)
 
 - Required for `cut_release_branch`, `update-podfile-lock`:
 
