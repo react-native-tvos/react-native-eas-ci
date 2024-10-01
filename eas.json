@@ -106,6 +106,18 @@
         "REACT_NATIVE_CORE_VERSION": "0.76.0-rc.2",
         "PUBLISH_TO_SONATYPE": "false"
       }
+    },
+    "Build iOS artifacts for RN core 0.76.0-rc.2": {
+      "extends": "maven_ios_artifacts",
+      "env": {
+        "REACT_NATIVE_REPO_URL": "https://github.com/facebook/react-native",
+        "REACT_NATIVE_REPO_BRANCH": "0.76-stable",
+        "REACT_NATIVE_RELEASE_BRANCH": "0.76-stable",
+        "REACT_NATIVE_RELEASE_VERSION": "0.76.0-rc.2",
+        "REACT_NATIVE_CORE_VERSION": "0.76.0-rc.2",
+        "INCLUDE_TV_OS": "false",
+        "PUBLISH_TO_SONATYPE": "false"
+      }
     }
   }
 }
