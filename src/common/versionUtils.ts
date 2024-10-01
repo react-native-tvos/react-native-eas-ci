@@ -39,7 +39,15 @@ export function parseVersion(versionStr: string, buildType: BuildType) {
 }
 
 export function baseCoreVersionStringForTV(versionStr: string) {
-  const versionInfo = parseVersion(versionStr, 'tvrelease');
+  try {
+    const tvVersionInfo = parseVersion(versionStr, 'tvrelease');
+    return versionToString({
+      ...tvVersionInfo,
+      prerelease: null,
+    });
+  } catch (_e) {}
+  // If the above fails, assume versionStr is a core release
+  const versionInfo = parseVersion(versionStr, 'release');
   return versionToString({
     ...versionInfo,
     prerelease: null,

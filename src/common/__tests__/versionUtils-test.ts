@@ -29,5 +29,6 @@ describe('baseCoreVersion tests', () => {
   test('Works as expected', () => {
     expect(baseCoreVersionStringForTV('0.75.2-0')).toEqual('0.75.2');
     expect(baseCoreVersionStringForTV('0.76.0-0rc1')).toEqual('0.76.0');
+    expect(baseCoreVersionStringForTV('0.75.3')).toEqual('0.75.3');
   });
 });
