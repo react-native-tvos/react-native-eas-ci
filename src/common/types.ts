@@ -11,6 +11,7 @@ export type RepoConstants = {
   publishToSonatype: boolean;
   pushReleaseToRepo: boolean;
   includeVisionOS: boolean;
+  includeTVOS: boolean;
 };
 
 export type MavenConstants = {

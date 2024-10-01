@@ -26,6 +26,7 @@ const includeVisionOS = boolValueFromString(
   process.env.INCLUDE_VISION_OS,
   true,
 );
+const includeTVOS = boolValueFromString(process.env.INCLUDE_TV_OS, true);
 const repoUrl = process.env.REACT_NATIVE_REPO_URL ?? '';
 const repoBranch = process.env.REACT_NATIVE_REPO_BRANCH ?? '';
 const releaseBranch = process.env.REACT_NATIVE_RELEASE_BRANCH ?? '';
@@ -48,6 +49,7 @@ export const repoConstants: RepoConstants = {
   publishToSonatype,
   pushReleaseToRepo,
   includeVisionOS,
+  includeTVOS,
 };
 
 export const easConstants: EasConstants = {
