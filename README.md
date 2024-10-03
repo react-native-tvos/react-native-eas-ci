@@ -138,6 +138,7 @@ See [Sonatype documentation](https://help.sonatype.com/en/iq-server-user-tokens.
   - String `IS_SNAPSHOT` (if "true", Maven artifacts are created as snapshots instead of release artifacts)
   - String `PUBLISH_TO_SONATYPE` (if "true", Maven artifacts are published to the snapshot or staging repository in Sonatype)
   - String `INCLUDE_VISION_OS` (if "false", Vision OS frameworks are omitted from the Apple Hermes artifacts. This option should only be used in RNTV builds, not in RN core builds)
+  - String `INCLUDE_TV_OS` (if "false", Apple TV frameworks are omitted from the Apple Hermes artifacts. This option must be used in RN core builds)
 
 - Required for `cut_release_branch`, `update-podfile-lock`:
 
