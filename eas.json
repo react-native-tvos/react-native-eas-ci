@@ -52,6 +52,19 @@
         "REACT_NATIVE_RELEASE_VERSION": "0.75.4-0"
       }
     },
+    "Test updating Podfile.lock for RNTV 0.76.0-0rc3": {
+      "extends": "update_podfile_lock",
+      "env": {
+        "REACT_NATIVE_REPO_URL": "https://github.com/react-native-tvos/react-native-tvos",
+        "REACT_NATIVE_REPO_BRANCH": "tvos-v0.76.0",
+        "REACT_NATIVE_RELEASE_BRANCH": "release-0.76.0-0rc3",
+        "REACT_NATIVE_RELEASE_VERSION": "0.76.0-0rc3",
+        "REACT_NATIVE_CORE_VERSION": "0.76.0-rc.3",
+        "INCLUDE_VISION_OS": "false",
+        "PUBLISH_TO_SONATYPE": "false",
+        "PUSH_RELEASE_TO_REPO": "false"
+      }
+    },
     "Cut release branch for RNTV 0.75.4-0": {
       "extends": "cut_release_branch",
       "env": {
