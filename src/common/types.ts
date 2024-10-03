@@ -16,9 +16,6 @@ export type RepoConstants = {
 
 export type MavenConstants = {
   namespace: string;
-  mavenArtifactsPath: string;
-  mavenLocalPath: string;
-  mavenLocalUrl: string;
   releaseVersion: string;
 };
 
@@ -28,6 +25,9 @@ export type EasConstants = {
   buildRunner: string;
   buildPlatform: string;
   isBuildLocal: boolean;
+  mavenArtifactsPath: string;
+  mavenLocalPath: string;
+  mavenLocalUrl: string;
 };
 
 export type PackageJSON = {

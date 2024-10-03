@@ -35,6 +35,9 @@ const repoName = path.basename(repoUrl);
 const repoPath = path.join(buildDir, repoName);
 const rnPackagePath = path.join(repoPath, 'packages', 'react-native');
 const vlPackagePath = path.join(repoPath, 'packages', 'virtualized-lists');
+const mavenLocalPath = path.join(buildDir, 'maven_local');
+const mavenLocalUrl = pathToFileURL(mavenLocalPath).toString();
+const mavenArtifactsPath = path.join(buildDir, 'maven_artifacts');
 
 export const repoConstants: RepoConstants = {
   repoUrl,
@@ -58,6 +61,9 @@ export const easConstants: EasConstants = {
   buildRunner,
   buildPlatform,
   isBuildLocal,
+  mavenLocalPath,
+  mavenLocalUrl,
+  mavenArtifactsPath,
 };
 
 export const getMavenConstantsAsync: () => Promise<MavenConstants> =
@@ -78,9 +84,6 @@ export const getMavenConstantsAsync: () => Promise<MavenConstants> =
       .replace('react.internal.publishingGroup=', '')
       .replace(/\./g, '/')
       .trim();
-    const mavenLocalPath = path.join(buildDir, 'maven_local');
-    const mavenLocalUrl = pathToFileURL(mavenLocalPath).toString();
-    const mavenArtifactsPath = path.join(buildDir, 'maven_artifacts');
     const packageJsonString = await fs.readFile(
       path.resolve(packagePath, 'package.json'),
       { encoding: 'utf-8' },
@@ -89,12 +92,7 @@ export const getMavenConstantsAsync: () => Promise<MavenConstants> =
 
     return {
       namespace,
-      mavenLocalPath,
-      mavenLocalUrl,
-      mavenArtifactsPath,
-      isSnapshot,
       releaseVersion,
-      publishToSonatype,
       pushReleaseToRepo,
     };
   };

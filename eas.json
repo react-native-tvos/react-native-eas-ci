@@ -39,6 +39,10 @@
       "extends": "base",
       "config": "complete_release.yml"
     },
+    "build_rntester": {
+      "extends": "base",
+      "config": "build_rntester.yml"
+    },
     "RNTV tvos-0.76.0 unit tests": {
       "extends": "run_unit_tests",
       "env": {
@@ -58,8 +62,8 @@
         "PUSH_RELEASE_TO_REPO": "true"
       }
     },
-    "Build test iOS artifacts for RNTV 0.75.4-0": {
-      "extends": "maven_ios_artifacts",
+    "Build RNTester for RNTV 0.75.4-0": {
+      "extends": "build_rntester",
       "env": {
         "REACT_NATIVE_REPO_URL": "https://github.com/react-native-tvos/react-native-tvos",
         "REACT_NATIVE_REPO_BRANCH": "tvos-v0.75.0",

@@ -6,10 +6,10 @@ import { promises as fs } from 'fs';
 import { test } from 'shelljs';
 import spawnAsync from '@expo/spawn-async';
 
-import { getMavenConstantsAsync, repoConstants } from './common';
+import { easConstants, repoConstants } from './common';
 
 const executeScriptAsync = async () => {
-  const { mavenArtifactsPath } = await getMavenConstantsAsync();
+  const { mavenArtifactsPath } = easConstants;
   if (!test('-e', mavenArtifactsPath)) {
     await fs.mkdir(mavenArtifactsPath);
   }

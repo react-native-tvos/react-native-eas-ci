@@ -3,16 +3,12 @@ import path from 'path';
 import { echo, exit } from 'shelljs';
 import spawnAsync from '@expo/spawn-async';
 
-import {
-  easConstants,
-  repoConstants,
-  getMavenConstantsAsync,
-} from './constants';
+import { easConstants, repoConstants } from './constants';
 
 export const copyPublishGradleFileAsync = async () => {
   const { rnPackagePath, isSnapshot } = repoConstants;
   const { sourceDir } = easConstants;
-  const { mavenLocalUrl } = await getMavenConstantsAsync();
+  const { mavenLocalUrl } = easConstants;
   const publishGradleSrcPath = path.resolve(sourceDir, 'publish.gradle');
   const publishGradleDestPath = path.resolve(
     rnPackagePath,

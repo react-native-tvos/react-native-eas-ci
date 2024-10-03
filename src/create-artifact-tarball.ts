@@ -7,10 +7,10 @@ import path from 'path';
 import { test } from 'shelljs';
 import spawnAsync from '@expo/spawn-async';
 
-import { getMavenConstantsAsync } from './common';
+import { easConstants } from './common';
 
 const executeScriptAsync = async () => {
-  const { mavenArtifactsPath, mavenLocalPath } = await getMavenConstantsAsync();
+  const { mavenArtifactsPath, mavenLocalPath } = easConstants;
   if (!test('-e', mavenArtifactsPath)) {
     await fs.mkdir(mavenArtifactsPath);
   }
