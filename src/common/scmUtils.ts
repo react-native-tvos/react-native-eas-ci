@@ -12,11 +12,16 @@
 
 import spawnAsync from '@expo/spawn-async';
 import { echo, test } from 'shelljs';
+import path from 'path';
 
-import { repoConstants } from './constants';
-import { unpackTarArchiveAsync } from './fileUtils';
+import { repoConstants, easConstants } from './constants';
+import {
+  removeDirectoryIfNeededAsync,
+  unpackTarArchiveAsync,
+} from './fileUtils';
 
 const { repoPath, repoName, repoUrl } = repoConstants;
+const { buildDir } = easConstants;
 
 export async function getBranchNameAsync() /*: string */ {
   const result = await spawnAsync(
@@ -104,6 +109,9 @@ export async function pushBranchAsync(branchName?: string) {
 
 export async function cloneAndInstallBranchAsync(branchName: string) {
   const sourceTarballPath = `${repoPath}.tar.gz`;
+  const destinationPath = path.join(buildDir, repoName);
+  await removeDirectoryIfNeededAsync(destinationPath);
+
   echo(`Checking if ${sourceTarballPath} exists...`);
   if (test('-e', sourceTarballPath)) {
     echo(`Unpacking supplied RN archive at ${sourceTarballPath}...`);

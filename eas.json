@@ -35,55 +35,72 @@
       "extends": "base",
       "config": "run_unit_tests.yml"
     },
+    "complete_release": {
+      "extends": "base",
+      "config": "complete_release.yml"
+    },
     "RNTV tvos-0.76.0 unit tests": {
       "extends": "run_unit_tests",
       "env": {
         "REACT_NATIVE_REPO_URL": "https://github.com/react-native-tvos/react-native-tvos",
         "REACT_NATIVE_REPO_BRANCH": "tvos-v0.76.0",
-        "REACT_NATIVE_RELEASE_BRANCH": "release-0.76.0-0rc2",
-        "REACT_NATIVE_RELEASE_VERSION": "0.76.0-0rc2"
+        "REACT_NATIVE_RELEASE_BRANCH": "release-0.76.0-0rc3",
+        "REACT_NATIVE_RELEASE_VERSION": "0.76.0-0rc3"
       }
     },
-    "Cut release branch for RNTV 0.76.0-0rc2": {
+    "Cut release branch for RNTV 0.76.0-0rc3": {
       "extends": "cut_release_branch",
       "env": {
         "REACT_NATIVE_REPO_URL": "https://github.com/react-native-tvos/react-native-tvos",
         "REACT_NATIVE_REPO_BRANCH": "tvos-v0.76.0",
-        "REACT_NATIVE_RELEASE_BRANCH": "release-0.76.0-0rc2",
-        "REACT_NATIVE_RELEASE_VERSION": "0.76.0-0rc2",
-        "PUSH_RELEASE_TO_REPO": "false"
+        "REACT_NATIVE_RELEASE_BRANCH": "release-0.76.0-0rc3",
+        "REACT_NATIVE_RELEASE_VERSION": "0.76.0-0rc3",
+        "PUSH_RELEASE_TO_REPO": "true"
       }
     },
-    "Build iOS artifacts for RNTV 0.76.0-0rc2 (no VisionOS)": {
+    "Build iOS artifacts for RNTV 0.76.0-0rc3 (no VisionOS)": {
       "extends": "maven_ios_artifacts",
       "env": {
         "REACT_NATIVE_REPO_URL": "https://github.com/react-native-tvos/react-native-tvos",
         "REACT_NATIVE_REPO_BRANCH": "tvos-v0.76.0",
-        "REACT_NATIVE_RELEASE_BRANCH": "release-0.76.0-0rc2",
-        "REACT_NATIVE_RELEASE_VERSION": "0.76.0-0rc2",
-        "REACT_NATIVE_CORE_VERSION": "0.76.0-rc.2",
+        "REACT_NATIVE_RELEASE_BRANCH": "release-0.76.0-0rc3",
+        "REACT_NATIVE_RELEASE_VERSION": "0.76.0-0rc3",
+        "REACT_NATIVE_CORE_VERSION": "0.76.0-rc.3",
         "INCLUDE_VISION_OS": "false",
         "PUBLISH_TO_SONATYPE": "false"
       }
     },
-    "Update Podfile.lock for RNTV 0.76.0-0rc2": {
+    "Complete release for RNTV 0.76.0-0rc3": {
+      "extends": "complete_release",
+      "env": {
+        "REACT_NATIVE_REPO_URL": "https://github.com/react-native-tvos/react-native-tvos",
+        "REACT_NATIVE_REPO_BRANCH": "tvos-v0.76.0",
+        "REACT_NATIVE_RELEASE_BRANCH": "release-0.76.0-0rc3",
+        "REACT_NATIVE_RELEASE_VERSION": "0.76.0-0rc3",
+        "REACT_NATIVE_CORE_VERSION": "0.76.0-rc.3",
+        "INCLUDE_VISION_OS": "false",
+        "PUBLISH_TO_SONATYPE": "true",
+        "PUSH_RELEASE_TO_REPO": "true"
+      }
+    },
+    "Update Podfile.lock for RNTV 0.76.0-0rc3": {
       "extends": "update_podfile_lock",
       "env": {
         "REACT_NATIVE_REPO_URL": "https://github.com/react-native-tvos/react-native-tvos",
         "REACT_NATIVE_REPO_BRANCH": "tvos-v0.76.0",
-        "REACT_NATIVE_RELEASE_BRANCH": "release-0.76.0-0rc2",
-        "REACT_NATIVE_RELEASE_VERSION": "0.76.0-0rc2",
+        "REACT_NATIVE_RELEASE_BRANCH": "release-0.76.0-0rc3",
+        "REACT_NATIVE_RELEASE_VERSION": "0.76.0-0rc3",
         "PUSH_RELEASE_TO_REPO": "false"
       }
     },
-    "Build Android artifacts for RNTV 0.76.0-0rc2": {
+    "Build Android artifacts for RNTV 0.76.0-0rc3": {
       "extends": "maven_android_artifacts",
       "env": {
         "REACT_NATIVE_REPO_URL": "https://github.com/react-native-tvos/react-native-tvos",
         "REACT_NATIVE_REPO_BRANCH": "tvos-v0.76.0",
-        "REACT_NATIVE_RELEASE_BRANCH": "release-0.76.0-0rc2",
-        "REACT_NATIVE_RELEASE_VERSION": "0.76.0-0rc2",
-        "REACT_NATIVE_CORE_VERSION": "0.76.0-rc.2",
+        "REACT_NATIVE_RELEASE_BRANCH": "release-0.76.0-0rc3",
+        "REACT_NATIVE_RELEASE_VERSION": "0.76.0-0rc3",
+        "REACT_NATIVE_CORE_VERSION": "0.76.0-rc.3",
         "PUBLISH_TO_SONATYPE": "false"
       }
     },
