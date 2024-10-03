@@ -7,10 +7,6 @@ build:
     - install_java
     - install_android_sdk
     - run:
-        name: Bump release version and push release branch
-        command: |
-          ./src/cut-release-branch.ts
-    - run:
         name: Build React Native iOS Maven artifacts
         command: |
           ./src/build-ios-artifacts.ts
