@@ -3,7 +3,13 @@ build:
   steps:
     - eas/checkout
     - eas/install_node_modules
+    - install_cmake
     - run:
         name: Update Podfile.lock and push to branch
         command: |
           ./src/update-podfile-lock.ts
+
+functions:
+  install_cmake:
+    name: Install Cmake
+    path: ./installCmake
