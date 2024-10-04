@@ -4,6 +4,8 @@ import { echo, exit } from 'shelljs';
 import spawnAsync from '@expo/spawn-async';
 
 import { easConstants, repoConstants } from './constants';
+import { rewriteFileAtPathAsync } from './fileUtils';
+import { copyFile } from 'fs/promises';
 
 export const copyPublishGradleFileAsync = async () => {
   const { rnPackagePath, isSnapshot } = repoConstants;
@@ -16,7 +18,14 @@ export const copyPublishGradleFileAsync = async () => {
     'publish.gradle',
   );
 
-  echo(`Read template publish.gradle...`);
+  echo(`Rewrite template publish.gradle to ${publishGradleDestPath}...`);
+  await copyFile(publishGradleSrcPath, publishGradleDestPath);
+  await rewriteFileAtPathAsync(publishGradleDestPath, [
+    { original: '$$MAVEN_TEMP_LOCAL_URL$$', replacement: `'${mavenLocalUrl}'` },
+    { original: '$$IS_SNAPSHOT$$', replacement: isSnapshot ? 'true' : 'false' },
+  ]);
+
+  /*
   const publishGradleText = await fs.readFile(publishGradleSrcPath, {
     encoding: 'utf-8',
   });
@@ -28,6 +37,7 @@ export const copyPublishGradleFileAsync = async () => {
   await fs.writeFile(publishGradleDestPath, publishGradleTextFinal, {
     encoding: 'utf-8',
   });
+   */
 };
 
 export const getGradleEnvAsync: () => Promise<NodeJS.ProcessEnv> = async () => {

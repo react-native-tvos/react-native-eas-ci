@@ -9,9 +9,6 @@ import {
   easConstants,
   repoConstants,
   cloneAndInstallBranchAsync,
-  commitStagedChangesAsync,
-  getCurrentCommitAsync,
-  pushBranchAsync,
   validateForGitHub,
   recreateDirectoryAsync,
   unpackTarArchiveAsync,
@@ -20,8 +17,9 @@ import {
 } from './common';
 import { test } from 'shelljs';
 import { rm } from 'fs/promises';
+import { podInstallRnTesterAsync } from './common/podInstallRnTester';
 
-const { releaseBranch, repoPath } = repoConstants;
+const { releaseBranch, repoPath, releaseVersion } = repoConstants;
 
 const rnTesterPath = path.join(repoPath, 'packages', 'rn-tester');
 
@@ -53,32 +51,7 @@ async function executeScriptAsync() {
 
   console.log(`Installing Cocoapods from local artifacts...`);
 
-  await spawnAsync('yarn', ['clean-ios'], {
-    cwd: rnTesterPath,
-    stdio: 'inherit',
-  });
-
-  // Set up Ruby path
-  const pathComponents = ['/opt/homebrew/bin', ...process.env.PATH.split(':')];
-
-  const podInstallEnv = {
-    ...process.env,
-    PATH: pathComponents.join(':'),
-    RCT_NEW_ARCH_ENABLED: '1',
-    HERMES_ARTIFACT_FROM_MAVEN_LOCAL: '1',
-    USE_HERMES: '1',
-  };
-
-  await spawnAsync('./modify-hermes-engine-for-rn-tester.sh', [], {
-    cwd: rnTesterPath,
-    env: podInstallEnv,
-    stdio: 'inherit',
-  });
-  await spawnAsync('pod', ['install'], {
-    cwd: rnTesterPath,
-    env: podInstallEnv,
-    stdio: 'inherit',
-  });
+  await podInstallRnTesterAsync(true);
 
   console.log('Build RNTester app for Apple TV simulator (debug)...');
 
@@ -115,7 +88,7 @@ async function executeScriptAsync() {
   );
   const rnTesterAppleTVArchivePath = path.join(
     mavenArtifactsPath,
-    'rntester-appletv.tgz',
+    `rntester-${releaseVersion}-appletv.tgz`,
   );
   await spawnAsync(
     'tar',
@@ -150,7 +123,7 @@ async function executeScriptAsync() {
   );
   const rnTesterAndroidTVArchivePath = path.join(
     mavenArtifactsPath,
-    'rntester-androidtv.tgz',
+    `rntester-${releaseVersion}-androidtv.tgz`,
   );
   await spawnAsync(
     'tar',

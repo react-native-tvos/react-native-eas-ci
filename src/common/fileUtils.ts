@@ -3,6 +3,7 @@ import path from 'path';
 import { promises as fs } from 'node:fs';
 import { Readable } from 'stream';
 import spawnAsync from '@expo/spawn-async';
+import { writeFile } from 'fs/promises';
 
 export const downloadFileAsync = async (
   url: string | URL | Request,
@@ -77,4 +78,19 @@ export const readFileFromPathAsync = async (filePath: string) => {
   } else {
     throw new Error(`${filePath} does not exist`);
   }
+};
+
+export const rewriteFileAtPathAsync = async (
+  filePath: string,
+  edits: { original: string | RegExp; replacement: string }[],
+) => {
+  const originalText = await readFileFromPathAsync(filePath);
+  let editedText = originalText;
+  for (const replacement of edits) {
+    editedText = editedText.replaceAll(
+      replacement.original,
+      replacement.replacement,
+    );
+  }
+  await writeFile(filePath, editedText, { encoding: 'utf-8' });
 };
