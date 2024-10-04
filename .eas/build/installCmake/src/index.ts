@@ -6,7 +6,7 @@ import spawnAsync from '@expo/spawn-async';
 import { tmpdir } from 'os';
 
 /**
- * Installs the Java SDK for iOS build runners.
+ * Installs Cmake for build runners.
  */
 async function installCmake(
   ctx: BuildStepContext,
@@ -29,7 +29,6 @@ async function installCmake(
   }
   if (env.EAS_BUILD_PLATFORM === 'ios') {
     await installCmakeForIos(ctx, { env });
-    await installRubyForIos(ctx, { env });
   } else {
     await installCmakeForAndroid(ctx, { env });
   }
@@ -71,28 +70,6 @@ async function installCmakeForIos(
   };
   ctx.logger.info('Installing cmake from brew...');
   await spawn(brewPath, ['install', 'cmake'], {
-    env: localEnv,
-    stdio: 'inherit',
-  });
-  ctx.logger.info('Done.');
-}
-
-async function installRubyForIos(
-  ctx: BuildStepContext,
-  {
-    env,
-  }: {
-    env: BuildStepEnv;
-  },
-) {
-  const brewPath = '/opt/homebrew/bin/brew';
-  const localEnv = {
-    ...env,
-    HOMEBREW_NO_AUTO_UPDATE: '1',
-    HOMEBREW_NO_INSTALL_CLEANUP: '1',
-  };
-  ctx.logger.info('Installing ruby from brew...');
-  await spawn(brewPath, ['install', 'ruby'], {
     env: localEnv,
     stdio: 'inherit',
   });

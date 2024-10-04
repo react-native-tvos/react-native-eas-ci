@@ -58,9 +58,25 @@ async function executeScriptAsync() {
     stdio: 'inherit',
   });
 
-  await spawnAsync('yarn', ['setup-ios-hermes-local-artifacts'], {
+  // Set up Ruby path
+  const pathComponents = ['/opt/homebrew/bin', ...process.env.PATH.split(':')];
+
+  const podInstallEnv = {
+    ...process.env,
+    PATH: pathComponents.join(':'),
+    RCT_NEW_ARCH_ENABLED: '1',
+    USE_HERMES: '1',
+  };
+
+  await spawnAsync('./modify-hermes-engine-for-rn-tester.sh', [], {
     cwd: rnTesterPath,
-    stdio: 'ignore',
+    env: podInstallEnv,
+    stdio: 'inherit',
+  });
+  await spawnAsync('pod', ['install'], {
+    cwd: rnTesterPath,
+    env: podInstallEnv,
+    stdio: 'inherit',
   });
 
   console.log('Build RNTester app for Apple TV simulator (debug)...');

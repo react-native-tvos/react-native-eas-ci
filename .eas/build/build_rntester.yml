@@ -4,6 +4,7 @@ build:
     - eas/checkout
     - eas/install_node_modules
     - install_cmake
+    - install_ruby
     - install_java
     - install_android_sdk
     - run:
@@ -32,6 +33,9 @@ functions:
   install_cmake:
     name: Install Cmake
     path: ./installCmake
+  install_ruby:
+    name: Install Ruby
+    path: ./installRuby
   install_android_sdk:
     name: Install Android SDK
     path: ./installAndroidSDK
