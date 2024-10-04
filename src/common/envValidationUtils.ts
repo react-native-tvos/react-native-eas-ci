@@ -2,7 +2,7 @@
  * Utilities for validating the environment settings
  */
 
-import { boolValueFromString, repoConstants } from './constants';
+import { boolValueFromString } from './constants';
 
 /*
 These environment variables must always be set:

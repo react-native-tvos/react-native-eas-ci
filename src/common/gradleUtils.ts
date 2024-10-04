@@ -1,4 +1,3 @@
-import { promises as fs } from 'fs';
 import path from 'path';
 import { echo, exit } from 'shelljs';
 import spawnAsync from '@expo/spawn-async';

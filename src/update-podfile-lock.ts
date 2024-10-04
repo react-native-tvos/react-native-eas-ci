@@ -15,8 +15,7 @@ import {
 } from './common';
 import { podInstallRnTesterAsync } from './common/podInstallRnTester';
 
-const { repoName, repoPath, rnPackagePath, releaseBranch, pushReleaseToRepo } =
-  repoConstants;
+const { repoName, repoPath, releaseBranch, pushReleaseToRepo } = repoConstants;
 
 const rnTesterPath = path.join(repoPath, 'packages', 'rn-tester');
 
