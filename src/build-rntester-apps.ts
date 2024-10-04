@@ -36,6 +36,8 @@ async function executeScriptAsync() {
     );
   }
 
+  await cloneAndInstallBranchAsync(releaseBranch);
+
   console.log(
     'Setting up Maven repository with local artifacts at /tmp/maven-local...',
   );
@@ -48,8 +50,6 @@ async function executeScriptAsync() {
     path.join(mavenArtifactsPath, 'maven-artifacts.tgz'),
     defaultMavenLocalRepositoryPath,
   );
-
-  await cloneAndInstallBranchAsync(releaseBranch);
 
   console.log(`Installing Cocoapods from local artifacts...`);
 
@@ -65,6 +65,7 @@ async function executeScriptAsync() {
     ...process.env,
     PATH: pathComponents.join(':'),
     RCT_NEW_ARCH_ENABLED: '1',
+    HERMES_ARTIFACT_FROM_MAVEN_LOCAL: '1',
     USE_HERMES: '1',
   };
 
