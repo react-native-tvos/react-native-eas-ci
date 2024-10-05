@@ -32,7 +32,7 @@ const {
   isSnapshot,
   publishToSonatype,
 } = repoConstants;
-const { buildDir } = easConstants;
+const { buildDir, mavenArtifactsPath } = easConstants;
 
 export const validateAndroidArtifactsAsync = async (releaseVersion: string) => {
   let artifacts = [
@@ -67,6 +67,11 @@ export const validateAndroidArtifactsAsync = async (releaseVersion: string) => {
 
 const executeScriptAsync = async function () {
   validateForMaven();
+
+  if (publishToSonatype) {
+    // Clean up maven_artifacts directory to free up space
+    await recreateDirectoryAsync(mavenArtifactsPath);
+  }
 
   await cloneAndInstallBranchAsync(releaseBranch);
 

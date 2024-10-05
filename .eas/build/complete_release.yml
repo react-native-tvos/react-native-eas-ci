@@ -8,7 +8,7 @@ build:
     - install_java
     - install_android_sdk
     - run:
-        name: Build React Native iOS Maven artifacts
+        name: Build and publish React Native iOS Maven artifacts
         command: |
           ./src/build-ios-artifacts.ts
     - run:
@@ -16,9 +16,17 @@ build:
         command: |
           ./src/update-podfile-lock.ts
     - run:
-        name: Build React Native Android Maven artifacts
+        name: Remove Maven artifacts for iOS
+        command: |
+          ./src/process-maven-artifacts.ts
+    - run:
+        name: Build and publish React Native Android Maven artifacts
         command: |
           ./src/build-android-artifacts.ts
+    - run:
+        name: Remove Maven artifacts for Android
+        command: |
+          ./src/process-maven-artifacts.ts
     - run:
         name: Create NPM tarballs
         command: |

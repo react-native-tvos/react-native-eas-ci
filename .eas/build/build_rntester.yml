@@ -14,7 +14,7 @@ build:
     - run:
         name: Create Maven artifact tarball
         command: |
-          ./src/create-artifact-tarball.ts
+          ./src/process-maven-artifacts.ts
     - run:
         name: Build RNTester apps using Maven tarball
         command: |
