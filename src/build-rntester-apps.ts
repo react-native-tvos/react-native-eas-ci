@@ -26,7 +26,11 @@ const rnTesterPath = path.join(repoPath, 'packages', 'rn-tester');
 async function executeScriptAsync() {
   validateForGitHub();
 
-  const { mavenArtifactsPath } = easConstants;
+  const { mavenLocalPath, mavenArtifactsPath } = easConstants;
+
+  console.log('Remove Maven local repository from iOS build...');
+
+  await removeDirectoryIfNeededAsync(mavenLocalPath);
 
   if (!test('-e', mavenArtifactsPath)) {
     throw new Error(
@@ -48,6 +52,9 @@ async function executeScriptAsync() {
     path.join(mavenArtifactsPath, 'maven-artifacts.tgz'),
     defaultMavenLocalRepositoryPath,
   );
+
+  // We can remove the Maven artifact tarball now
+  await recreateDirectoryAsync(mavenArtifactsPath);
 
   console.log(`Installing Cocoapods from local artifacts...`);
 
@@ -98,6 +105,10 @@ async function executeScriptAsync() {
       stdio: 'inherit',
     },
   );
+
+  console.log('Remove /tmp/maven-local now that Apple TV build is done...');
+
+  await removeDirectoryIfNeededAsync(defaultMavenLocalRepositoryPath);
 
   console.log('Build RNTester app for Android TV simulator (debug)...');
 

@@ -20,6 +20,7 @@ import {
   runGradlewTasksAsync,
   validateForMaven,
   cloneAndInstallBranchAsync,
+  removeDirectoryIfNeededAsync,
 } from './common';
 
 const {
@@ -341,6 +342,11 @@ const executeScriptAsync = async () => {
       'PUBLISH_TO_SONATYPE is false, artifacts will not be published.',
     );
   }
+  console.log('Clean up temporary files...');
+
+  await removeDirectoryIfNeededAsync(HERMES_DSYMS_WORKING_DIR);
+  await removeDirectoryIfNeededAsync(HERMES_DSYMS_DEST_DIR);
+
   console.log('Done.');
 };
 
