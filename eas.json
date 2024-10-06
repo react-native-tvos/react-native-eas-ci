@@ -62,6 +62,28 @@
         "PUSH_RELEASE_TO_REPO": "true"
       }
     },
+    "Cut test branch for RNTV 0.76.0-0test2": {
+      "extends": "cut_release_branch",
+      "env": {
+        "REACT_NATIVE_REPO_URL": "https://github.com/react-native-tvos/react-native-tvos",
+        "REACT_NATIVE_REPO_BRANCH": "tvos-v0.76.0",
+        "REACT_NATIVE_RELEASE_BRANCH": "release-0.76.0-0test2",
+        "REACT_NATIVE_RELEASE_VERSION": "0.76.0-0test2",
+        "PUSH_RELEASE_TO_REPO": "true"
+      }
+    },
+    "Build RNTester for RNTV 0.76.0-0test2": {
+      "extends": "build_rntester",
+      "env": {
+        "REACT_NATIVE_REPO_URL": "https://github.com/react-native-tvos/react-native-tvos",
+        "REACT_NATIVE_REPO_BRANCH": "tvos-v0.76.0",
+        "REACT_NATIVE_RELEASE_BRANCH": "release-0.76.0-0test2",
+        "REACT_NATIVE_RELEASE_VERSION": "0.76.0-0test2",
+        "REACT_NATIVE_CORE_VERSION": "0.76.0-rc.3",
+        "INCLUDE_VISION_OS": "false",
+        "PUBLISH_TO_SONATYPE": "false"
+      }
+    },
     "Build RNTester for RNTV 0.75.4-0": {
       "extends": "build_rntester",
       "env": {
