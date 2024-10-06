@@ -16,7 +16,6 @@ import {
   runGradlewTasksAsync,
 } from './common';
 import { test } from 'shelljs';
-import { rm } from 'fs/promises';
 import { podInstallRnTesterAsync } from './common/podInstallRnTester';
 
 const { releaseBranch, repoPath, releaseVersion } = repoConstants;
@@ -152,10 +151,6 @@ async function executeScriptAsync() {
     },
   );
 
-  // If we get here, it is safe to remove large Maven iOS artifacts
-  console.log('Remove maven-artifacts.tgz...');
-  const tarballPath = path.join(mavenArtifactsPath, 'maven-artifacts.tgz');
-  await rm(tarballPath);
   console.log('Done.');
 }
 
