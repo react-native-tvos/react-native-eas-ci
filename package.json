@@ -5,6 +5,7 @@
   "description": "CI for React Native using EAS custom builds",
   "dependencies": {
     "expo": "~51.0.13",
+    "gluegun": "^5.2.0",
     "react": "18.2.0"
   },
   "devDependencies": {
