@@ -35,6 +35,28 @@ export async function getBranchNameAsync() /*: string */ {
   return result.output[0].trim();
 }
 
+export async function doesBranchExistAtUrl(url: string, branchName: string) {
+  const result = await spawnAsync(
+    'git',
+    ['ls-remote', '--heads', url, `refs/heads/${branchName}`],
+    {
+      stdio: 'pipe',
+    },
+  );
+  return result.output[0].trim().length > 0;
+}
+
+export async function doesTagExistAtUrl(url: string, tagName: string) {
+  const result = await spawnAsync(
+    'git',
+    ['ls-remote', url, `refs/tags/${tagName}`],
+    {
+      stdio: 'pipe',
+    },
+  );
+  return result.output[0].trim().length > 0;
+}
+
 export async function getCurrentCommitAsync() {
   const result = await spawnAsync('git', ['rev-parse', 'HEAD'], {
     stdio: 'pipe',
