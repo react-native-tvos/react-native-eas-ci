@@ -35,7 +35,10 @@ export async function getBranchNameAsync() /*: string */ {
   return result.output[0].trim();
 }
 
-export async function doesBranchExistAtUrl(url: string, branchName: string) {
+export async function doesBranchExistAtUrlAsync(
+  url: string,
+  branchName: string,
+) {
   const result = await spawnAsync(
     'git',
     ['ls-remote', '--heads', url, `refs/heads/${branchName}`],
@@ -46,7 +49,7 @@ export async function doesBranchExistAtUrl(url: string, branchName: string) {
   return result.output[0].trim().length > 0;
 }
 
-export async function doesTagExistAtUrl(url: string, tagName: string) {
+export async function doesTagExistAtUrlAsync(url: string, tagName: string) {
   const result = await spawnAsync(
     'git',
     ['ls-remote', url, `refs/tags/${tagName}`],

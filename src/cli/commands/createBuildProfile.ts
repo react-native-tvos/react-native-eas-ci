@@ -1,10 +1,13 @@
 import { GluegunToolbox } from 'gluegun';
 import {
   baseCoreVersionStringForTV,
-  doesBranchExistAtUrl,
-  doesTagExistAtUrl,
+  doesBranchExistAtUrlAsync,
+  doesTagExistAtUrlAsync,
+  readFileFromPathAsync,
 } from '../../common';
 import { PromptOptions } from 'gluegun/build/types/toolbox/prompt-enquirer-types';
+import path from 'path';
+import { writeFile } from 'fs/promises';
 
 const repoUrl = 'https://github.com/react-native-tvos/react-native-tvos';
 
@@ -12,6 +15,10 @@ type ProfileKeyType =
   | 'cut_release_branch'
   | 'build_rntester'
   | 'complete_release';
+
+type EASJsonObject = {
+  build: { [key: string]: object };
+};
 
 const profileDescriptions = {
   cut_release_branch: 'Cut a new release branch',
@@ -38,9 +45,7 @@ const buildProfileName = (
 };
 
 const buildProfile = (buildType: ProfileKeyType, releaseVersion: string) => {
-  const name = buildProfileName(buildType, releaseVersion);
-  const returnValue = {};
-  returnValue[name] = {
+  const returnValue = {
     extends: buildType,
     env: {
       REACT_NATIVE_REPO_URL: repoUrl,
@@ -63,12 +68,12 @@ const validateSelectionsAsync = async (
 ) => {
   const branchNameSelected = releaseBranchForVersion(releaseVersionSelected);
 
-  const releaseBranchExists = await doesBranchExistAtUrl(
+  const releaseBranchExists = await doesBranchExistAtUrlAsync(
     repoUrl,
     branchNameSelected,
   );
 
-  const releaseTagExists = await doesTagExistAtUrl(
+  const releaseTagExists = await doesTagExistAtUrlAsync(
     repoUrl,
     `v${releaseVersionSelected}`,
   );
@@ -146,5 +151,23 @@ module.exports = {
         2,
       )}`,
     );
+
+    const addToEASJson = await toolbox.prompt.confirm(
+      'Add this profile to eas.json?',
+    );
+
+    if (addToEASJson) {
+      const name = buildProfileName(buildTypeSelected, releaseVersionSelected);
+      const easJsonPath = path.resolve(process.env.PWD, 'eas.json');
+      const easJsonString = await readFileFromPathAsync(easJsonPath);
+      const easJson: EASJsonObject = JSON.parse(easJsonString);
+      easJson.build[name] = generatedProfile;
+      await writeFile(easJsonPath, JSON.stringify(easJson, null, 2), {
+        encoding: 'utf-8',
+      });
+      info(`New profile "${name}" added to eas.json.`);
+    } else {
+      info('No changes made to eas.json.');
+    }
   },
 };
