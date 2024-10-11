@@ -52,54 +52,6 @@
         "REACT_NATIVE_RELEASE_VERSION": "0.76.0-0rc4"
       }
     },
-    "Cut release branch for RNTV 0.76.0-0rc4": {
-      "extends": "cut_release_branch",
-      "env": {
-        "REACT_NATIVE_REPO_URL": "https://github.com/react-native-tvos/react-native-tvos",
-        "REACT_NATIVE_REPO_BRANCH": "tvos-v0.76.0",
-        "REACT_NATIVE_RELEASE_BRANCH": "release-0.76.0-0rc4",
-        "REACT_NATIVE_RELEASE_VERSION": "0.76.0-0rc4",
-        "PUSH_RELEASE_TO_REPO": "true"
-      }
-    },
-    "Build RNTester for RNTV 0.76.0-0rc4": {
-      "extends": "build_rntester",
-      "env": {
-        "REACT_NATIVE_REPO_URL": "https://github.com/react-native-tvos/react-native-tvos",
-        "REACT_NATIVE_REPO_BRANCH": "tvos-v0.76.0",
-        "REACT_NATIVE_RELEASE_BRANCH": "release-0.76.0-0rc4",
-        "REACT_NATIVE_RELEASE_VERSION": "0.76.0-0rc4",
-        "REACT_NATIVE_CORE_VERSION": "0.76.0-rc.4",
-        "INCLUDE_VISION_OS": "false",
-        "PUBLISH_TO_SONATYPE": "false"
-      }
-    },
-    "Complete release for RNTV 0.76.0-0rc4": {
-      "extends": "complete_release",
-      "env": {
-        "REACT_NATIVE_REPO_URL": "https://github.com/react-native-tvos/react-native-tvos",
-        "REACT_NATIVE_REPO_BRANCH": "tvos-v0.76.0",
-        "REACT_NATIVE_RELEASE_BRANCH": "release-0.76.0-0rc4",
-        "REACT_NATIVE_RELEASE_VERSION": "0.76.0-0rc4",
-        "REACT_NATIVE_CORE_VERSION": "0.76.0-rc.4",
-        "INCLUDE_VISION_OS": "false",
-        "PUBLISH_TO_SONATYPE": "true",
-        "PUSH_RELEASE_TO_REPO": "true"
-      }
-    },
-    "Build Android artifacts for RNTV 0.76.0-0rc4": {
-      "extends": "maven_android_artifacts",
-      "env": {
-        "REACT_NATIVE_REPO_URL": "https://github.com/react-native-tvos/react-native-tvos",
-        "REACT_NATIVE_REPO_BRANCH": "tvos-v0.76.0",
-        "REACT_NATIVE_RELEASE_BRANCH": "release-0.76.0-0rc4",
-        "REACT_NATIVE_RELEASE_VERSION": "0.76.0-0rc4",
-        "REACT_NATIVE_CORE_VERSION": "0.76.0-rc.4",
-        "INCLUDE_VISION_OS": "false",
-        "PUBLISH_TO_SONATYPE": "true",
-        "PUSH_RELEASE_TO_REPO": "true"
-      }
-    },
     "RN core 0.76-stable unit tests": {
       "extends": "run_unit_tests",
       "env": {
@@ -109,7 +61,7 @@
         "REACT_NATIVE_RELEASE_VERSION": "0.76.0-rc.4"
       }
     },
-    "Build Android artifacts for RN core 0.76.0-rc.2": {
+    "Build Android artifacts for RN core 0.76.0-rc.4": {
       "extends": "maven_android_artifacts",
       "env": {
         "REACT_NATIVE_REPO_URL": "https://github.com/facebook/react-native",
@@ -117,18 +69,6 @@
         "REACT_NATIVE_RELEASE_BRANCH": "0.76-stable",
         "REACT_NATIVE_RELEASE_VERSION": "0.76.0-rc.4",
         "REACT_NATIVE_CORE_VERSION": "0.76.0-rc.4",
-        "PUBLISH_TO_SONATYPE": "false"
-      }
-    },
-    "Build iOS artifacts for RN core 0.76.0-rc.2": {
-      "extends": "maven_ios_artifacts",
-      "env": {
-        "REACT_NATIVE_REPO_URL": "https://github.com/facebook/react-native",
-        "REACT_NATIVE_REPO_BRANCH": "0.76-stable",
-        "REACT_NATIVE_RELEASE_BRANCH": "0.76-stable",
-        "REACT_NATIVE_RELEASE_VERSION": "0.76.0-rc.4",
-        "REACT_NATIVE_CORE_VERSION": "0.76.0-rc.4",
-        "INCLUDE_TV_OS": "false",
         "PUBLISH_TO_SONATYPE": "false"
       }
     }
