@@ -166,7 +166,7 @@ module.exports = {
       error,
     );
     if (!valid) {
-      // return;
+      return;
     }
 
     const generatedProfile = buildProfile(
