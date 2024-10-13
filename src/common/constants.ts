@@ -5,13 +5,36 @@ import { pathToFileURL } from 'url';
 
 import { RepoConstants, MavenConstants, EasConstants } from './types';
 
+const trueStrings = new Set([
+  '1',
+  'true',
+  'TRUE',
+  'True',
+  'yes',
+  'YES',
+  'Yes',
+  'y',
+  'Y',
+]);
+const falseStrings = new Set([
+  '0',
+  'false',
+  'FALSE',
+  'False',
+  'no',
+  'NO',
+  'No',
+  'n',
+  'N',
+]);
+
 export const boolValueFromString: (
   testString: string,
   defaultValue?: boolean,
 ) => boolean = (testString, defaultValue) => {
   return defaultValue === true
-    ? testString !== '0' && testString !== 'false' && testString !== 'FALSE'
-    : testString === '1' || testString === 'true' || testString === 'TRUE';
+    ? !falseStrings.has(testString)
+    : trueStrings.has(testString);
 };
 
 const buildDir = process.env.EAS_BUILD_WORKINGDIR ?? '.';

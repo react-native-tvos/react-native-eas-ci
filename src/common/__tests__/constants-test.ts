@@ -10,6 +10,7 @@ describe('constants tests', () => {
     expect(boolValueFromString('0')).toBe(false);
     expect(boolValueFromString('2')).toBe(false);
     expect(boolValueFromString('1')).toBe(true);
+    expect(boolValueFromString('Y')).toBe(true);
     expect(boolValueFromString(undefined)).toBe(false);
   });
   test('boolValueFromString tests with default true', () => {
@@ -23,5 +24,7 @@ describe('constants tests', () => {
     expect(boolValueFromString('2', true)).toBe(true);
     expect(boolValueFromString('1', true)).toBe(true);
     expect(boolValueFromString(undefined, true)).toBe(true);
+    expect(boolValueFromString('NO', true)).toBe(false);
+    expect(boolValueFromString('N', true)).toBe(false);
   });
 });
