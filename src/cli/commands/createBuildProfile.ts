@@ -1,24 +1,40 @@
 import { GluegunToolbox } from 'gluegun';
+import { PromptOptions } from 'gluegun/build/types/toolbox/prompt-enquirer-types';
+import path from 'path';
+import dotenv from 'dotenv';
+import { writeFile } from 'fs/promises';
+
 import {
   baseCoreVersionStringForTV,
   doesBranchExistAtUrlAsync,
   doesTagExistAtUrlAsync,
   readFileFromPathAsync,
 } from '../../common';
-import { PromptOptions } from 'gluegun/build/types/toolbox/prompt-enquirer-types';
-import path from 'path';
-import { writeFile } from 'fs/promises';
+import { EasJsonBuildProfile } from '@expo/eas-json/build/build/types';
 
-const repoUrl = 'https://github.com/react-native-tvos/react-native-tvos';
+type EasJson = {
+  cli?: {
+    version?: string;
+    requireCommit?: boolean;
+    appVersionSource?: 'local' | 'remote';
+    promptToConfigurePushNotifications?: boolean;
+  };
+  build?: {
+    [profileName: string]: EasJsonBuildProfile;
+  };
+};
+
+dotenv.config();
+
+const repoUrl =
+  process.env.CLI_REPO_URL ??
+  'https://github.com/react-native-tvos/react-native-tvos';
+const devBranch = process.env.CLI_DEV_BRANCH ?? 'tvos-v0.76.0';
 
 type ProfileKeyType =
   | 'cut_release_branch'
   | 'build_rntester'
   | 'complete_release';
-
-type EASJsonObject = {
-  build: { [key: string]: object };
-};
 
 const profileDescriptions = {
   cut_release_branch: 'Cut a new release branch',
@@ -44,12 +60,15 @@ const buildProfileName = (
   }
 };
 
-const buildProfile = (buildType: ProfileKeyType, releaseVersion: string) => {
+const buildProfile = (
+  buildType: ProfileKeyType,
+  releaseVersion: string,
+): EasJsonBuildProfile => {
   const returnValue = {
     extends: buildType,
     env: {
       REACT_NATIVE_REPO_URL: repoUrl,
-      REACT_NATIVE_REPO_BRANCH: 'tvos-v0.76.0',
+      REACT_NATIVE_REPO_BRANCH: devBranch,
       REACT_NATIVE_RELEASE_BRANCH: releaseBranchForVersion(releaseVersion),
       REACT_NATIVE_RELEASE_VERSION: releaseVersion,
       REACT_NATIVE_CORE_VERSION: baseCoreVersionStringForTV(releaseVersion),
@@ -105,29 +124,40 @@ module.exports = {
   description: 'Create a build profile',
   run: async (toolbox: GluegunToolbox) => {
     const {
+      parameters,
       print: { info, error },
     } = toolbox;
 
-    const buildTypeSelected = (
-      await toolbox.prompt.ask({
-        type: 'select',
-        name: 'selection',
-        message: 'Select the type of build profile to create',
-        choices: Object.keys(profileDescriptions).map(
-          (k) => `${k} (${profileDescriptions[k]})`,
-        ),
-      } as PromptOptions)
-    ).selection.split(' ')[0] as unknown as ProfileKeyType;
+    let [buildTypeSelectedString, releaseVersionSelected, addToEASJsonString] =
+      parameters.array;
+
+    let buildTypeSelected: ProfileKeyType = 'build_rntester';
+    if (buildTypeSelectedString === undefined) {
+      buildTypeSelected = (
+        await toolbox.prompt.ask({
+          type: 'select',
+          name: 'selection',
+          message: 'Select the type of build profile to create',
+          choices: Object.keys(profileDescriptions).map(
+            (k) => `${k} (${profileDescriptions[k]})`,
+          ),
+        } as PromptOptions)
+      ).selection.split(' ')[0] as unknown as ProfileKeyType;
+    } else {
+      buildTypeSelected = buildTypeSelectedString as unknown as ProfileKeyType;
+    }
     info(`You selected ${buildTypeSelected}`);
 
-    const releaseVersionSelected = (
-      await toolbox.prompt.ask({
-        type: 'input',
-        name: 'selection',
-        message: 'Input the release version you want to build',
-        default: '0.76.0-0rc4',
-      } as PromptOptions)
-    ).selection;
+    if (releaseVersionSelected === undefined) {
+      releaseVersionSelected = (
+        await toolbox.prompt.ask({
+          type: 'input',
+          name: 'selection',
+          message: 'Input the release version you want to build',
+          default: '0.76.0-0rc4',
+        } as PromptOptions)
+      ).selection;
+    }
     info(`You input ${releaseVersionSelected}`);
 
     const valid = await validateSelectionsAsync(
@@ -136,7 +166,7 @@ module.exports = {
       error,
     );
     if (!valid) {
-      return;
+      // return;
     }
 
     const generatedProfile = buildProfile(
@@ -152,15 +182,22 @@ module.exports = {
       )}`,
     );
 
-    const addToEASJson = await toolbox.prompt.confirm(
-      'Add this profile to eas.json?',
-    );
+    let addToEASJson = false;
+    if (addToEASJsonString === undefined) {
+      addToEASJson = await toolbox.prompt.confirm(
+        'Add this profile to eas.json?',
+      );
+    } else {
+      addToEASJson = new Set(['Y', 'y', '1', 'yes', 'YES']).has(
+        addToEASJsonString,
+      );
+    }
 
     if (addToEASJson) {
       const name = buildProfileName(buildTypeSelected, releaseVersionSelected);
       const easJsonPath = path.resolve(process.env.PWD, 'eas.json');
       const easJsonString = await readFileFromPathAsync(easJsonPath);
-      const easJson: EASJsonObject = JSON.parse(easJsonString);
+      const easJson: EasJson = JSON.parse(easJsonString) as EasJson;
       easJson.build[name] = generatedProfile;
       await writeFile(easJsonPath, JSON.stringify(easJson, null, 2), {
         encoding: 'utf-8',
