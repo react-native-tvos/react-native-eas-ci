@@ -11,7 +11,7 @@ import spawnAsync from '@expo/spawn-async';
 const { buildDir } = easConstants;
 const easBuildDir = path.resolve(buildDir, '.eas', 'build');
 
-const easFunctions = ['installCmake', 'installJava', 'installAndroidSDK'];
+const easFunctions = ['installCmake', 'installJava', 'installAndroidSDK', 'installRuby'];
 
 const buildAndInstallEasFunctionAsync = async (easFunctionName: string) => {
   await spawnAsync('yarn', [], {
