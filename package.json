@@ -27,6 +27,7 @@
   },
   "scripts": {
     "postinstall": "./src/post-install.ts",
+    "cli": "./src/cli/index.ts",
     "test": "jest",
     "lint": "expo lint"
   },
