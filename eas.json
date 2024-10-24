@@ -43,6 +43,10 @@
       "extends": "base",
       "config": "build_rntester.yml"
     },
+    "build_rntester_prod": {
+      "extends": "base",
+      "config": "build_rntester_prod.yml"
+    },
     "RNTV tvos-0.76.0 unit tests": {
       "extends": "run_unit_tests",
       "env": {
@@ -71,7 +75,45 @@
         "REACT_NATIVE_CORE_VERSION": "0.76.0-rc.4",
         "PUBLISH_TO_SONATYPE": "false"
       }
+    },
+    "Cut release branch for RNTV 0.76.0-0": {
+      "extends": "cut_release_branch",
+      "env": {
+        "REACT_NATIVE_REPO_URL": "https://github.com/react-native-tvos/react-native-tvos",
+        "REACT_NATIVE_REPO_BRANCH": "tvos-v0.76.0",
+        "REACT_NATIVE_RELEASE_BRANCH": "release-0.76.0-0",
+        "REACT_NATIVE_RELEASE_VERSION": "0.76.0-0",
+        "REACT_NATIVE_CORE_VERSION": "0.76.0",
+        "INCLUDE_VISION_OS": "false",
+        "PUBLISH_TO_SONATYPE": "false",
+        "PUSH_RELEASE_TO_REPO": "true"
+      }
+    },
+    "Complete release for RNTV 0.76.0-0": {
+      "extends": "complete_release",
+      "env": {
+        "REACT_NATIVE_REPO_URL": "https://github.com/react-native-tvos/react-native-tvos",
+        "REACT_NATIVE_REPO_BRANCH": "tvos-v0.76.0",
+        "REACT_NATIVE_RELEASE_BRANCH": "release-0.76.0-0",
+        "REACT_NATIVE_RELEASE_VERSION": "0.76.0-0",
+        "REACT_NATIVE_CORE_VERSION": "0.76.0",
+        "INCLUDE_VISION_OS": "false",
+        "PUBLISH_TO_SONATYPE": "true",
+        "PUSH_RELEASE_TO_REPO": "true"
+      }
+    },
+    "Build RNTester apps for RNTV 0.76.0-0": {
+      "extends": "build_rntester_prod",
+      "env": {
+        "REACT_NATIVE_REPO_URL": "https://github.com/react-native-tvos/react-native-tvos",
+        "REACT_NATIVE_REPO_BRANCH": "tvos-v0.76.0",
+        "REACT_NATIVE_RELEASE_BRANCH": "release-0.76.0-0",
+        "REACT_NATIVE_RELEASE_VERSION": "0.76.0-0",
+        "REACT_NATIVE_CORE_VERSION": "0.76.0",
+        "INCLUDE_VISION_OS": "false",
+        "PUBLISH_TO_SONATYPE": "false",
+        "PUSH_RELEASE_TO_REPO": "false"
+      }
     }
   }
 }
-

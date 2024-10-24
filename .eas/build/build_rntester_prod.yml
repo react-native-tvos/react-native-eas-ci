@@ -1,0 +1,33 @@
+build:
+  name: Build RNTester artifacts (for a released prod version)
+  steps:
+    - eas/checkout
+    - eas/install_node_modules
+    - install_cmake
+    - install_ruby
+    - install_java
+    - install_android_sdk
+    - run:
+        name: Build RNTester apps
+        command: |
+          ./src/build-rntester-apps-prod.ts
+    - eas/upload_artifact:
+        name: Upload RNTester artifacts
+        inputs:
+          type: build-artifact
+          path: |
+            maven_artifacts/*.tgz
+
+functions:
+  install_java:
+    name: Install Java
+    path: ./installJava
+  install_cmake:
+    name: Install Cmake
+    path: ./installCmake
+  install_ruby:
+    name: Install Ruby
+    path: ./installRuby
+  install_android_sdk:
+    name: Install Android SDK
+    path: ./installAndroidSDK
