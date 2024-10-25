@@ -1,4 +1,6 @@
 node_modules
+.env
+yarn-error.log
 .eas/build/installAndroidSDK/build
 .eas/build/installCmake/build
 .eas/build/installJava/build
