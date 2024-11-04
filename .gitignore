@@ -4,3 +4,4 @@ yarn-error.log
 .eas/build/installAndroidSDK/build
 .eas/build/installCmake/build
 .eas/build/installJava/build
+.eas/build/installRuby/build

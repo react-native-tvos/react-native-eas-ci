@@ -154,7 +154,7 @@ module.exports = {
           type: 'input',
           name: 'selection',
           message: 'Input the release version you want to build',
-          default: process.env.CLI_RELEASE_VERSION ?? '0.76.0-0rc4',
+          default: process.env.CLI_RELEASE_VERSION ?? '0.76.1-0',
         } as PromptOptions)
       ).selection;
     }
