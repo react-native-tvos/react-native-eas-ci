@@ -62,57 +62,7 @@
         "REACT_NATIVE_REPO_URL": "https://github.com/facebook/react-native",
         "REACT_NATIVE_REPO_BRANCH": "0.76-stable",
         "REACT_NATIVE_RELEASE_BRANCH": "0.76-stable",
-        "REACT_NATIVE_RELEASE_VERSION": "0.76.0-rc.4"
-      }
-    },
-    "Build Android artifacts for RN core 0.76.0-rc.4": {
-      "extends": "maven_android_artifacts",
-      "env": {
-        "REACT_NATIVE_REPO_URL": "https://github.com/facebook/react-native",
-        "REACT_NATIVE_REPO_BRANCH": "0.76-stable",
-        "REACT_NATIVE_RELEASE_BRANCH": "0.76-stable",
-        "REACT_NATIVE_RELEASE_VERSION": "0.76.0-rc.4",
-        "REACT_NATIVE_CORE_VERSION": "0.76.0-rc.4",
-        "PUBLISH_TO_SONATYPE": "false"
-      }
-    },
-    "Cut release branch for RNTV 0.76.0-0": {
-      "extends": "cut_release_branch",
-      "env": {
-        "REACT_NATIVE_REPO_URL": "https://github.com/react-native-tvos/react-native-tvos",
-        "REACT_NATIVE_REPO_BRANCH": "tvos-v0.76.0",
-        "REACT_NATIVE_RELEASE_BRANCH": "release-0.76.0-0",
-        "REACT_NATIVE_RELEASE_VERSION": "0.76.0-0",
-        "REACT_NATIVE_CORE_VERSION": "0.76.0",
-        "INCLUDE_VISION_OS": "false",
-        "PUBLISH_TO_SONATYPE": "false",
-        "PUSH_RELEASE_TO_REPO": "true"
-      }
-    },
-    "Complete release for RNTV 0.76.0-0": {
-      "extends": "complete_release",
-      "env": {
-        "REACT_NATIVE_REPO_URL": "https://github.com/react-native-tvos/react-native-tvos",
-        "REACT_NATIVE_REPO_BRANCH": "tvos-v0.76.0",
-        "REACT_NATIVE_RELEASE_BRANCH": "release-0.76.0-0",
-        "REACT_NATIVE_RELEASE_VERSION": "0.76.0-0",
-        "REACT_NATIVE_CORE_VERSION": "0.76.0",
-        "INCLUDE_VISION_OS": "false",
-        "PUBLISH_TO_SONATYPE": "true",
-        "PUSH_RELEASE_TO_REPO": "true"
-      }
-    },
-    "Build RNTester apps for RNTV 0.76.0-0": {
-      "extends": "build_rntester_prod",
-      "env": {
-        "REACT_NATIVE_REPO_URL": "https://github.com/react-native-tvos/react-native-tvos",
-        "REACT_NATIVE_REPO_BRANCH": "tvos-v0.76.0",
-        "REACT_NATIVE_RELEASE_BRANCH": "release-0.76.0-0",
-        "REACT_NATIVE_RELEASE_VERSION": "0.76.0-0",
-        "REACT_NATIVE_CORE_VERSION": "0.76.0",
-        "INCLUDE_VISION_OS": "false",
-        "PUBLISH_TO_SONATYPE": "false",
-        "PUSH_RELEASE_TO_REPO": "false"
+        "REACT_NATIVE_RELEASE_VERSION": "0.76.1-0"
       }
     }
   }
