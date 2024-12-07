@@ -21,6 +21,10 @@ const executeScriptAsync = async () => {
     await removeDirectoryIfNeededAsync(mavenLocalPath);
     return;
   } else {
+    if (!test('-e', mavenLocalPath)) {
+      echo('No artifacts to package.');
+      return;
+    }
     echo('Packaging Maven artifacts...');
     if (!test('-e', mavenArtifactsPath)) {
       await fs.mkdir(mavenArtifactsPath);

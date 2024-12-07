@@ -31,33 +31,36 @@ async function executeScriptAsync() {
 
   await removeDirectoryIfNeededAsync(mavenLocalPath);
 
-  if (!test('-e', mavenArtifactsPath)) {
-    throw new Error(
-      'This script requires that Maven iOS artifacts already be built.',
-    );
-  }
-
   await cloneAndInstallBranchAsync(releaseBranch);
 
-  console.log(
-    'Setting up Maven repository with local artifacts at /tmp/maven-local...',
-  );
+  if (test('-e', mavenArtifactsPath)) {
+    console.log(
+      'Setting up Maven repository with local artifacts at /tmp/maven-local...',
+    );
 
-  const defaultMavenLocalRepositoryPath = path.join('/', 'tmp', 'maven-local');
+    const defaultMavenLocalRepositoryPath = path.join(
+      '/',
+      'tmp',
+      'maven-local',
+    );
 
-  await recreateDirectoryAsync(defaultMavenLocalRepositoryPath);
+    await recreateDirectoryAsync(defaultMavenLocalRepositoryPath);
 
-  await unpackTarArchiveAsync(
-    path.join(mavenArtifactsPath, 'maven-artifacts.tgz'),
-    defaultMavenLocalRepositoryPath,
-  );
+    await unpackTarArchiveAsync(
+      path.join(mavenArtifactsPath, 'maven-artifacts.tgz'),
+      defaultMavenLocalRepositoryPath,
+    );
 
-  // We can remove the Maven artifact tarball now
-  await recreateDirectoryAsync(mavenArtifactsPath);
+    // We can remove the Maven artifact tarball now
+    await recreateDirectoryAsync(mavenArtifactsPath);
 
-  console.log(`Installing Cocoapods from local artifacts...`);
+    console.log(`Installing Cocoapods from local artifacts...`);
 
-  await podInstallRnTesterAsync(true);
+    await podInstallRnTesterAsync(true);
+  } else {
+    console.log(`Installing Cocoapods...`);
+    await podInstallRnTesterAsync(false);
+  }
 
   console.log('Build RNTester app for Apple TV simulator (debug)...');
 

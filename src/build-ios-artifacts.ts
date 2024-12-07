@@ -21,6 +21,7 @@ import {
   validateForMaven,
   cloneAndInstallBranchAsync,
   removeDirectoryIfNeededAsync,
+  parseVersion,
 } from './common';
 
 const {
@@ -298,6 +299,14 @@ const executeScriptAsync = async () => {
   await cloneAndInstallBranchAsync(releaseBranch);
 
   const { releaseVersion } = await getMavenConstantsAsync();
+
+  const version = parseVersion(releaseVersion, 'tvrelease');
+
+  if (parseInt(version.minor, 10) >= 77) {
+    // No need to build Hermes for 77 and later
+    echo(`Hermes build not required for RN 0.77 and later.`);
+    return;
+  }
 
   await copyPublishGradleFileAsync();
 
