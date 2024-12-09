@@ -37,7 +37,7 @@ async function installJavaFromBrewAsync(env: BuildStepEnv) {
     HOMEBREW_NO_INSTALL_CLEANUP: '1',
   };
 
-  await spawn(brewPath, ['install', 'openjdk'], {
+  await spawn(brewPath, ['install', 'openjdk@17'], {
     env: localEnv,
   });
 }

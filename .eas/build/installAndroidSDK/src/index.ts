@@ -81,7 +81,7 @@ async function androidLicensesAsync(env: BuildStepEnv) {
     ...(isIosRunner(env)
       ? {
           JAVA_HOME:
-            '/opt/homebrew/opt/openjdk/libexec/openjdk.jdk/Contents/Home',
+            '/opt/homebrew/Cellar/openjdk@17/17.0.13/libexec/openjdk.jdk/Contents/Home',
         }
       : {}),
   };
@@ -100,7 +100,7 @@ async function installAndroidDependencyAsync(
     ...(isIosRunner(env)
       ? {
           JAVA_HOME:
-            '/opt/homebrew/opt/openjdk/libexec/openjdk.jdk/Contents/Home',
+            '/opt/homebrew/Cellar/openjdk@17/17.0.13/libexec/openjdk.jdk/Contents/Home',
         }
       : {}),
   };
