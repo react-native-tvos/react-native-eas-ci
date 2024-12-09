@@ -38,7 +38,9 @@ async function executeScriptAsync() {
   const latestCommitBeforeRelease = await getCurrentCommitAsync();
   console.log(`Latest commit = ${latestCommitBeforeRelease}`);
 
-  await commitStagedChangesAsync('Update Podfile.lock');
+  try {
+    await commitStagedChangesAsync('Update Podfile.lock');
+  } catch (_) {}
 
   const latestCommitAfterRelease = await getCurrentCommitAsync();
   console.log(`Latest commit = ${latestCommitAfterRelease}`);

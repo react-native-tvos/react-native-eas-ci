@@ -13,7 +13,6 @@ import {
   copyDirectoryContentsAsync,
   copyPublishGradleFileAsync,
   downloadFileAsync,
-  getMavenConstantsAsync,
   repoConstants,
   readFileFromPathAsync,
   recreateDirectoryAsync,
@@ -296,9 +295,7 @@ const buildHermesIosArtifactAsync = async (
 const executeScriptAsync = async () => {
   validateForMaven();
 
-  await cloneAndInstallBranchAsync(releaseBranch);
-
-  const { releaseVersion } = await getMavenConstantsAsync();
+  const { releaseVersion } = repoConstants;
 
   const version = parseVersion(releaseVersion, 'tvrelease');
 
@@ -307,6 +304,8 @@ const executeScriptAsync = async () => {
     echo(`Hermes build not required for RN 0.77 and later.`);
     return;
   }
+
+  await cloneAndInstallBranchAsync(releaseBranch);
 
   await copyPublishGradleFileAsync();
 

@@ -33,16 +33,14 @@ async function executeScriptAsync() {
 
   await cloneAndInstallBranchAsync(releaseBranch);
 
+  let defaultMavenLocalRepositoryPath: string | undefined = undefined;
+
   if (test('-e', mavenArtifactsPath)) {
     console.log(
       'Setting up Maven repository with local artifacts at /tmp/maven-local...',
     );
 
-    const defaultMavenLocalRepositoryPath = path.join(
-      '/',
-      'tmp',
-      'maven-local',
-    );
+    defaultMavenLocalRepositoryPath = path.join('/', 'tmp', 'maven-local');
 
     await recreateDirectoryAsync(defaultMavenLocalRepositoryPath);
 
@@ -58,6 +56,7 @@ async function executeScriptAsync() {
 
     await podInstallRnTesterAsync(true);
   } else {
+    recreateDirectoryAsync(mavenArtifactsPath);
     console.log(`Installing Cocoapods...`);
     await podInstallRnTesterAsync(false);
   }
@@ -110,7 +109,9 @@ async function executeScriptAsync() {
 
   console.log('Remove /tmp/maven-local now that Apple TV build is done...');
 
-  await removeDirectoryIfNeededAsync(defaultMavenLocalRepositoryPath);
+  if (defaultMavenLocalRepositoryPath) {
+    await removeDirectoryIfNeededAsync(defaultMavenLocalRepositoryPath);
+  }
 
   console.log('Build RNTester app for Android TV simulator (debug)...');
 
