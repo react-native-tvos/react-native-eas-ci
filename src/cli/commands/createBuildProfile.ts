@@ -11,6 +11,7 @@ import {
   readFileFromPathAsync,
 } from '../../common';
 import { EasJsonBuildProfile } from '@expo/eas-json/build/build/types';
+import spawnAsync from '@expo/spawn-async';
 
 type EasJson = {
   cli?: {
@@ -120,7 +121,7 @@ const validateSelectionsAsync = async (
 
 module.exports = {
   name: 'Create a build profile',
-  alias: ['cbp'],
+  alias: ['c'],
   description: 'Create a build profile',
   run: async (toolbox: GluegunToolbox) => {
     const {
@@ -128,8 +129,12 @@ module.exports = {
       print: { info, error },
     } = toolbox;
 
-    let [buildTypeSelectedString, releaseVersionSelected, addToEASJsonString] =
-      parameters.array;
+    let [
+      buildTypeSelectedString,
+      releaseVersionSelected,
+      addToEASJsonString,
+      executeBuildString,
+    ] = parameters.array;
 
     let buildTypeSelected: ProfileKeyType = 'build_rntester';
     if (buildTypeSelectedString === undefined) {
@@ -203,6 +208,27 @@ module.exports = {
         encoding: 'utf-8',
       });
       info(`New profile "${name}" added to eas.json.`);
+
+      let executeBuild = false;
+      if (executeBuildString === undefined) {
+        executeBuild = await toolbox.prompt.confirm('Execute build?');
+      } else {
+        executeBuild = new Set(['Y', 'y', '1', 'yes', 'YES']).has(
+          executeBuildString,
+        );
+      }
+
+      if (executeBuild) {
+        const platform =
+          buildTypeSelected === 'cut_release_branch' ? 'android' : 'ios';
+        await spawnAsync(
+          'eas',
+          ['build', '-e', name, '-p', platform, '--no-wait'],
+          {
+            stdio: 'inherit',
+          },
+        );
+      }
     } else {
       info('No changes made to eas.json.');
     }
