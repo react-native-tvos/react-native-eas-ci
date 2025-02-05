@@ -22,6 +22,7 @@ import {
   cloneAndInstallBranchAsync,
   rewriteReactNativePackageJsonAsync,
   rewriteVirtualizedListsPackageJsonAsync,
+  rewriteFileAtPathAsync,
 } from './common';
 
 const {
@@ -59,6 +60,23 @@ async function executeScriptAsync() {
   await setReactNativeVersion(versionInfo, {
     '@react-native-tvos/virtualized-lists': versionInfo.version,
   });
+
+  console.log('Modify gradle.properties for correct Maven namespace...');
+
+  const gradlePropertiesPath = path.resolve(
+    repoPath,
+    'packages',
+    'react-native',
+    'ReactAndroid',
+    'gradle.properties',
+  );
+
+  await rewriteFileAtPathAsync(gradlePropertiesPath, [
+    {
+      original: 'react.internal.publishingGroup=com.facebook.react',
+      replacement: 'react.internal.publishingGroup=io.github.react-native-tvos',
+    },
+  ]);
 
   console.log('Updating and adding yarn.lock...');
 

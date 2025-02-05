@@ -81,7 +81,7 @@ async function executeScriptAsync() {
     ],
     {
       cwd: rnTesterPath,
-      stdio: 'ignore',
+      stdio: 'inherit',
     },
   );
 

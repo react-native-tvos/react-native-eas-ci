@@ -101,10 +101,9 @@ export async function updatePackageJsonAsync(
       continue;
     }
 
-    if (deps['react-native']) {
+    if (deps['react-native'] && dependencyField !== 'peerDependencies') {
       delete deps['react-native'];
-      deps[repoName] =
-        dependencyField === 'peerDependencies' ? '*' : packageJson.version;
+      deps[repoName] = packageJson.version;
     }
 
     for (const dependency in newPackageVersions) {
