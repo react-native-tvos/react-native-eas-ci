@@ -20,6 +20,8 @@ import {
   pushBranchAsync,
   validateForGitHub,
   cloneAndInstallBranchAsync,
+  rewriteReactNativePackageJsonAsync,
+  rewriteVirtualizedListsPackageJsonAsync,
 } from './common';
 
 const {
@@ -43,6 +45,12 @@ async function executeScriptAsync() {
   validateForGitHub();
 
   await cloneAndInstallBranchAsync(repoBranch);
+
+  console.log('Rewrite react-native package JSON...');
+  await rewriteReactNativePackageJsonAsync();
+
+  console.log('Rewrite virtualized-lists package JSON...');
+  await rewriteVirtualizedListsPackageJsonAsync();
 
   const versionInfo = parseVersion(releaseVersion, 'tvrelease');
 

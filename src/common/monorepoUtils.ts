@@ -134,6 +134,69 @@ async function writePackageJsonAsync(
 }
 
 /**
+ * Read a `package.json` file from disk.
+ */
+async function readPackageJsonAsync(
+  packageJsonPath: string,
+) /*: Promise<PackageJSON> */ {
+  const packageJsonString = await fs.readFile(packageJsonPath, {
+    encoding: 'utf-8',
+  });
+  return JSON.parse(packageJsonString) as PackageJSON;
+}
+
+async function rewritePackageJsonAsync(
+  packageJsonPath: string,
+  packageJsonMutator: (originalPackageJson: PackageJSON) => PackageJSON,
+) {
+  const originalPackageJson = await readPackageJsonAsync(packageJsonPath);
+  const modifiedPackageJson = packageJsonMutator({ ...originalPackageJson });
+  await writePackageJsonAsync(packageJsonPath, modifiedPackageJson);
+}
+
+/**
+ * renames the react-native package to react-native-tvos
+ * uses @react-native-tvos/virtualized-lists dependency
+ */
+export async function rewriteReactNativePackageJsonAsync() {
+  const reactNativePackagePath = path.resolve(
+    repoPath,
+    'packages',
+    'react-native',
+    'package.json',
+  );
+  rewritePackageJsonAsync(reactNativePackagePath, (reactNativeJson) => {
+    reactNativeJson.name = 'react-native';
+    delete reactNativeJson.devDependencies;
+    reactNativeJson.dependencies = {
+      ...reactNativeJson.dependencies,
+      '@react-native-tvos/virtualized-lists': reactNativeJson.version,
+      '@react-native/virtualized-lists': undefined,
+    };
+    return reactNativeJson;
+  });
+}
+
+/**
+ * renames the virtualized-lists package to react-native-tvos namespace
+ */
+export async function rewriteVirtualizedListsPackageJsonAsync() {
+  const virtualizedListsPackagePath = path.resolve(
+    repoPath,
+    'packages',
+    'virtualized-lists',
+    'package.json',
+  );
+  rewritePackageJsonAsync(
+    virtualizedListsPackagePath,
+    (virtualizedListsPackageJson) => {
+      virtualizedListsPackageJson.name = '@react-native-tvos/virtualized-lists';
+      return virtualizedListsPackageJson;
+    },
+  );
+}
+
+/**
  * `package` is an object form of package.json
  * `dependencies` is a map of dependency to version string
  *

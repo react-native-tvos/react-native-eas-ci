@@ -50,7 +50,7 @@ export function baseCoreVersionStringForTV(versionStr: string) {
       ...tvVersionInfo,
       prerelease,
     });
-  } catch (_e) {}
+  } catch (e) {} // eslint-disable-line @typescript-eslint/no-unused-vars
   // If the above fails, assume versionStr is a core release
   const versionInfo = parseVersion(versionStr, 'release');
   return versionToString({

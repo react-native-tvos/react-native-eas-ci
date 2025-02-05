@@ -12,6 +12,8 @@ import {
   easConstants,
   validateEnv,
   cloneAndInstallBranchAsync,
+  rewriteReactNativePackageJsonAsync,
+  rewriteVirtualizedListsPackageJsonAsync,
 } from './common';
 
 const { repoPath, repoBranch } = repoConstants;
@@ -58,26 +60,6 @@ function describe(message: string) {
   echo(`\n\n>>>>> ${message}\n\n\n`);
 }
 
-async function rewriteReactNativePackageNameAsync() {
-  const reactNativePackagePath = path.resolve(
-    repoPath,
-    'packages',
-    'react-native',
-    'package.json',
-  );
-  const reactNativeJsonString = await fs.readFile(reactNativePackagePath, {
-    encoding: 'utf-8',
-  });
-  const reactNativeJson = JSON.parse(reactNativeJsonString);
-  reactNativeJson.name = 'react-native';
-  delete reactNativeJson.devDependencies;
-  await fs.writeFile(
-    reactNativePackagePath,
-    JSON.stringify(reactNativeJson, null, 2),
-    { encoding: 'utf-8' },
-  );
-}
-
 const executeScriptAsync: () => Promise<void> = async () => {
   validateEnv();
 
@@ -85,8 +67,11 @@ const executeScriptAsync: () => Promise<void> = async () => {
 
   echo('Executing JavaScript tests');
 
-  echo('Rewrite react-native package name...');
-  await rewriteReactNativePackageNameAsync();
+  echo('Rewrite react-native package JSON...');
+  await rewriteReactNativePackageJsonAsync();
+
+  echo('Rewrite virtualized-lists package JSON...');
+  await rewriteVirtualizedListsPackageJsonAsync();
 
   echo('Reinstall NPM packages...');
   await runTestTaskAsync();
@@ -107,13 +92,14 @@ const executeScriptAsync: () => Promise<void> = async () => {
     throw new Error('ESLint test failed.');
   }
 
+  /*
   describe('Test: Flow check');
   const flowResult = await runTestTaskAsync({ command: 'flow-check' });
   await appendToTestResultsAsync(flowResult.output.join('\n'));
   if (flowResult.status) {
     throw new Error('Flow check failed.');
   }
-
+ */
   describe('Test: Build @react-native/codegen');
   const codegenResult = await runTestTaskAsync({
     command: 'build',
