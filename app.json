@@ -6,7 +6,10 @@
       "package": "com.reactnativeeasci"
     },
     "ios": {
-      "bundleIdentifier": "com.reactnativeeasci"
+      "bundleIdentifier": "com.reactnativeeasci",
+      "config": {
+        "usesNonExemptEncryption": false
+      }
     }
   }
 }
