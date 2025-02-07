@@ -18,11 +18,10 @@ import {
   copyPublishGradleFileAsync,
   getMavenConstantsAsync,
   baseCoreVersionStringForTV,
-  getPackages,
-  ProjectInfo,
   unpackTarArchiveAsync,
   validateForMaven,
   cloneAndInstallBranchAsync,
+  getReactNativeVersion,
 } from './common';
 
 const {
@@ -97,21 +96,23 @@ const executeScriptAsync = async function () {
     ).trim();
     hermesReleaseURI = `https://github.com/facebook/hermes/archive/refs/tags/${hermesReleaseTag}.tar.gz`;
     extraHermesDirectoryPath = `${HERMES_INSTALL_LOCATION}/hermes/hermes-${hermesReleaseTag}`;
-  } catch (err) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  } catch (e) {
     echo('Failed to read current Hermes release tag.');
     // TODO: We'll need to make sure every release going forward has one of these.
     exit(1);
   }
 
+  /*
   const packages: ProjectInfo = await getPackages({
     includeReactNative: true,
     includePrivate: false,
   });
+   */
+
+  const reactNativeVersion = await getReactNativeVersion();
 
   console.log(`repoName = ${repoName}`);
-
-  const reactNativeVersion = packages[repoName].version;
-  console.log(`reactNativeVersion = ${reactNativeVersion}`);
 
   let reactNativeCoreVersion = baseCoreVersionStringForTV(reactNativeVersion);
   // Override if env variable set

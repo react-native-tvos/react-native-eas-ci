@@ -2,6 +2,16 @@ import { BuildType, Version } from './types';
 
 const VERSION_REGEX = /^v?((\d+)\.(\d+)\.(\d+)(?:-(.+))?)$/;
 
+const version_type_map = {
+  release: validateRelease,
+  'dry-run': validateDryRun,
+  nightly: validateNightly,
+  prealpha: validatePrealpha,
+  tvrelease: validateTVRelease,
+};
+
+const version_types = new Set(Object.keys(version_type_map));
+
 /**
  * Parses a version string and performs some checks to verify its validity.
  * A valid version is in the format vX.Y.Z[-KKK] where X, Y, Z are numbers and KKK can be something else.
@@ -36,6 +46,19 @@ export function parseVersion(versionStr: string, buildType: BuildType) {
   }
 
   return parsedVersion;
+}
+
+export function parseAnyVersion(versionStr: string) {
+  for (let buildTypeString of version_types) {
+    const buildType = buildTypeString as unknown as BuildType;
+    try {
+      const parsed = parseVersion(versionStr, buildType);
+      if (parsed) {
+        return parsed;
+      }
+    } catch (e) {} // eslint-disable-line @typescript-eslint/no-unused-vars
+  }
+  throw new Error('Version string did not match any parser.');
 }
 
 export function baseCoreVersionStringForTV(versionStr: string) {
@@ -77,15 +100,10 @@ function extractMatchIfValid(versionStr /*: string */) {
 }
 
 function validateVersion(versionObject: Version, buildType: BuildType) {
-  const map = {
-    release: validateRelease,
-    'dry-run': validateDryRun,
-    nightly: validateNightly,
-    prealpha: validatePrealpha,
-    tvrelease: validateTVRelease,
-  };
-
-  const validationFunction = map[buildType];
+  if (!version_types.has(buildType)) {
+    throw new Error(`Unrecognized build type ${buildType}`);
+  }
+  const validationFunction = version_type_map[buildType];
   validationFunction(versionObject);
 }
 

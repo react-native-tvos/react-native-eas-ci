@@ -12,6 +12,7 @@ import {
   getCurrentCommitAsync,
   pushBranchAsync,
   validateForGitHub,
+  rewritePackageNamesIfNeeded,
 } from './common';
 import { podInstallRnTesterAsync } from './common/podInstallRnTester';
 
@@ -23,6 +24,8 @@ async function executeScriptAsync() {
   validateForGitHub();
 
   await cloneAndInstallBranchAsync(releaseBranch);
+
+  await rewritePackageNamesIfNeeded();
 
   console.log(`Installing Cocoapods...`);
 
@@ -40,7 +43,7 @@ async function executeScriptAsync() {
 
   try {
     await commitStagedChangesAsync('Update Podfile.lock');
-  } catch (_) {}
+  } catch (e) {} // eslint-disable-line @typescript-eslint/no-unused-vars
 
   const latestCommitAfterRelease = await getCurrentCommitAsync();
   console.log(`Latest commit = ${latestCommitAfterRelease}`);

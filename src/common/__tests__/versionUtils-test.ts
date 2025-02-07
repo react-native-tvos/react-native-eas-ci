@@ -1,4 +1,8 @@
-import { baseCoreVersionStringForTV, parseVersion } from '../versionUtils';
+import {
+  baseCoreVersionStringForTV,
+  parseAnyVersion,
+  parseVersion,
+} from '../versionUtils';
 
 describe('parseVersion tests', () => {
   test('Works on core as expected', () => {
@@ -22,6 +26,14 @@ describe('parseVersion tests', () => {
     expect(version.major).toEqual('0');
     expect(version.minor).toEqual('75');
     expect(version.prerelease).toEqual('0');
+  });
+});
+describe('parseAnyVersion tests', () => {
+  test('Works on core as expected', () => {
+    const version = parseAnyVersion('0.75.2');
+    expect(version.major).toEqual('0');
+    expect(version.minor).toEqual('75');
+    expect(version.prerelease).toBeUndefined();
   });
 });
 

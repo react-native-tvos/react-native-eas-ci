@@ -12,6 +12,7 @@
 import { PackageJSON, PackageInfo, PackagesFilter, ProjectInfo } from './types';
 
 import { repoConstants } from './constants';
+import { parseAnyVersion } from './versionUtils';
 import { promises as fs } from 'fs';
 import glob from 'glob';
 import path from 'path';
@@ -21,7 +22,7 @@ const { repoName, repoPath } = repoConstants;
 const WORKSPACES_CONFIG = 'packages/*';
 
 /**
- * Locates monrepo packages and returns a mapping of package names to their
+ * Locates monorepo packages and returns a mapping of package names to their
  * metadata. Considers Yarn workspaces under `packages/`.
  */
 export async function getPackages(filter: PackagesFilter) {
@@ -44,6 +45,22 @@ export async function getPackages(filter: PackagesFilter) {
       ([_, { packageJson }]) => packageJson.private !== true || includePrivate,
     ),
   ) as ProjectInfo;
+}
+
+/**
+ * Get the react-native version from the monorepo.
+ * @returns the version string from the react-native package
+ */
+export async function getReactNativeVersion() {
+  const packages: ProjectInfo = await getPackages({
+    includeReactNative: true,
+    includePrivate: false,
+  });
+
+  const reactNativeVersion =
+    packages[repoName]?.version ?? packages['react-native'].version;
+
+  return reactNativeVersion;
 }
 
 /**
@@ -165,7 +182,7 @@ export async function rewriteReactNativePackageJsonAsync() {
     'package.json',
   );
   rewritePackageJsonAsync(reactNativePackagePath, (reactNativeJson) => {
-    reactNativeJson.name = 'react-native';
+    reactNativeJson.name = 'react-native-tvos';
     delete reactNativeJson.devDependencies;
     reactNativeJson.dependencies = {
       ...reactNativeJson.dependencies,
@@ -193,6 +210,31 @@ export async function rewriteVirtualizedListsPackageJsonAsync() {
       return virtualizedListsPackageJson;
     },
   );
+}
+
+/**
+ * Wrapper function to rename the react-native and virtualized-lists repos if
+ * we are at version 0.78 or higher
+ */
+export async function rewritePackageNamesIfNeeded() {
+  const reactNativeVersion = await getReactNativeVersion();
+  console.log(`reactNativeVersion`);
+  const reactNativeVersionInfo = parseAnyVersion(reactNativeVersion);
+  console.log(
+    `reactNativeVersionInfo: ${JSON.stringify(
+      reactNativeVersionInfo,
+      null,
+      2,
+    )}`,
+  );
+
+  if (parseInt(reactNativeVersionInfo?.minor ?? '0', 10) >= 78) {
+    console.log('Rewrite react-native package JSON...');
+    await rewriteReactNativePackageJsonAsync();
+
+    console.log('Rewrite virtualized-lists package JSON...');
+    await rewriteVirtualizedListsPackageJsonAsync();
+  }
 }
 
 /**
