@@ -47,13 +47,22 @@
       "extends": "base",
       "config": "build_rntester_prod.yml"
     },
+    "RNTV tvos-0.77.0 unit tests": {
+      "extends": "run_unit_tests",
+      "env": {
+        "REACT_NATIVE_REPO_URL": "https://github.com/react-native-tvos/react-native-tvos",
+        "REACT_NATIVE_REPO_BRANCH": "tvos-v0.77.0",
+        "REACT_NATIVE_RELEASE_BRANCH": "release-0.77.0-0",
+        "REACT_NATIVE_RELEASE_VERSION": "0.77.0-0"
+      }
+    },
     "RNTV tvos-0.78.0 unit tests": {
       "extends": "run_unit_tests",
       "env": {
         "REACT_NATIVE_REPO_URL": "https://github.com/react-native-tvos/react-native-tvos",
         "REACT_NATIVE_REPO_BRANCH": "tvos-v0.78.0",
-        "REACT_NATIVE_RELEASE_BRANCH": "release-0.78.0-0rc3",
-        "REACT_NATIVE_RELEASE_VERSION": "0.78.0-0rc3"
+        "REACT_NATIVE_RELEASE_BRANCH": "release-0.78.0-0rc5",
+        "REACT_NATIVE_RELEASE_VERSION": "0.78.0-0rc5"
       }
     },
     "RN core 0.78-stable unit tests": {
