@@ -79,6 +79,11 @@ const executeScriptAsync: () => Promise<void> = async () => {
   describe('Test: feature flags codegen');
   const featureFlagsResult = await runTestTaskAsync({
     command: 'featureflags-check',
+    cwdPath: path.resolve(
+      repoPath,
+      'packages',
+      'react-native',
+    ),
   });
   await appendToTestResultsAsync(featureFlagsResult.output.join('\n'));
   if (featureFlagsResult.status) {
