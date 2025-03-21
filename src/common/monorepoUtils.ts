@@ -174,7 +174,9 @@ async function rewritePackageJsonAsync(
  * renames the react-native package to react-native-tvos
  * uses @react-native-tvos/virtualized-lists dependency
  */
-export async function rewriteReactNativePackageJsonAsync() {
+export async function rewriteReactNativePackageJsonAsync(
+  reactNativePackageName?: string
+) {
   const reactNativePackagePath = path.resolve(
     repoPath,
     'packages',
@@ -182,7 +184,7 @@ export async function rewriteReactNativePackageJsonAsync() {
     'package.json',
   );
   rewritePackageJsonAsync(reactNativePackagePath, (reactNativeJson) => {
-    reactNativeJson.name = 'react-native-tvos';
+    reactNativeJson.name = reactNativePackageName ?? 'react-native-tvos';
     delete reactNativeJson.devDependencies;
     reactNativeJson.dependencies = {
       ...reactNativeJson.dependencies,

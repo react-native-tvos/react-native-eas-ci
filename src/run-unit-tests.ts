@@ -68,7 +68,7 @@ const executeScriptAsync: () => Promise<void> = async () => {
   echo('Executing JavaScript tests');
 
   echo('Rewrite react-native package JSON...');
-  await rewriteReactNativePackageJsonAsync();
+  await rewriteReactNativePackageJsonAsync('react-native');
 
   echo('Rewrite virtualized-lists package JSON...');
   await rewriteVirtualizedListsPackageJsonAsync();
