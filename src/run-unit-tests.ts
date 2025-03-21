@@ -48,7 +48,7 @@ export const runTestTaskAsync: (params?: {
   }
   try {
     return await spawnAsync('yarn', args, {
-      stdio: 'pipe',
+      stdio: 'inherit',
       cwd: repoPath,
     });
   } catch (e) {
