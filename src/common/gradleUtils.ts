@@ -48,7 +48,7 @@ export const getGradleEnvAsync: () => Promise<NodeJS.ProcessEnv> = async () => {
   }
 
   const JAVA_HOME =
-    '/opt/homebrew/Cellar/openjdk@17/17.0.13/libexec/openjdk.jdk/Contents/Home';
+    '/opt/homebrew/Cellar/openjdk@17/17.0.14/libexec/openjdk.jdk/Contents/Home';
   const ANDROID_HOME = '/opt/homebrew/share/android-commandlinetools';
   const pathComponents = [
     ...process.env.PATH.split(':'),

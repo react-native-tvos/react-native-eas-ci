@@ -42,7 +42,7 @@ async function installRubyForIos(
     env: localEnv,
     stdio: 'inherit',
   });
-  await spawn('ruby-install', ['ruby', '3.3.5', '--system'], {
+  await spawn('ruby-install', ['ruby', '3.4.2', '--system'], {
     env: localEnv,
     stdio: 'inherit',
   });
