@@ -1,4 +1,4 @@
-#!/usr/bin/env -S yarn --silent ts-node --transpile-only
+#!/usr/bin/env -S bun --silent ts-node --transpile-only
 
 'use strict';
 

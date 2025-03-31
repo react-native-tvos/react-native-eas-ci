@@ -1,4 +1,4 @@
-#!/usr/bin/env -S yarn --silent ts-node --transpile-only
+#!/usr/bin/env -S bun --silent ts-node --transpile-only
 
 'use strict';
 
@@ -14,11 +14,11 @@ const easBuildDir = path.resolve(buildDir, '.eas', 'build');
 const easFunctions = ['installCmake', 'installJava', 'installAndroidSDK', 'installRuby'];
 
 const buildAndInstallEasFunctionAsync = async (easFunctionName: string) => {
-  await spawnAsync('yarn', [], {
+  await spawnAsync('bun', ['install'], {
     stdio: 'inherit',
     cwd: path.resolve(easBuildDir, easFunctionName),
   });
-  await spawnAsync('yarn', ['build'], {
+  await spawnAsync('bun', ['run', 'build'], {
     stdio: 'inherit',
     cwd: path.resolve(easBuildDir, easFunctionName),
   });
