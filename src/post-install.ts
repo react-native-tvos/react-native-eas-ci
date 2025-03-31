@@ -11,7 +11,7 @@ import spawnAsync from '@expo/spawn-async';
 const { buildDir } = easConstants;
 const easBuildDir = path.resolve(buildDir, '.eas', 'build');
 
-const easFunctions = ['installCmake', 'installJava', 'installAndroidSDK', 'installRuby'];
+const easFunctions = ['installCmake', 'installJava', 'installAndroidSDK', 'installRuby', 'checkForChangedPaths'];
 
 const buildAndInstallEasFunctionAsync = async (easFunctionName: string) => {
   await spawnAsync('bun', ['install'], {

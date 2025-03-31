@@ -47,6 +47,10 @@
       "extends": "base",
       "config": "build_rntester_prod.yml"
     },
+    "check_for_changed_paths": {
+      "extends": "base",
+      "config": "check_for_changed_paths.yml"
+    },
     "RNTV tvos-0.77.0 unit tests": {
       "extends": "run_unit_tests",
       "env": {

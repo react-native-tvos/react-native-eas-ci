@@ -1,0 +1,18 @@
+build:
+  name: Check for changed paths
+  steps:
+    - eas/checkout
+    - check_for_changed_paths:
+        inputs:
+          config: {"branch": "doug/check-paths", "paths": [".eas/build/**"]}
+    - check_for_changed_paths:
+        inputs:
+          config: {"branch": "doug/check-paths", "paths": ["src/**"]}
+
+functions:
+  check_for_changed_paths:
+    name: Check for changed paths
+    path: ./checkForChangedPaths
+    inputs:
+      - name: config
+        type: json
