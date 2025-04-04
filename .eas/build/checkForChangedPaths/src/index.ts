@@ -11,6 +11,7 @@ import picomatch from 'picomatch';
 import { v4 as uuid } from 'uuid';
 
 import { Filter as PathsFilter } from 'paths-filter/build/filter';
+import type { FilterResults } from 'paths-filter/build/filter';
 import * as git from 'paths-filter/build/git';
 
 // Minimatch options used in all matchers
@@ -64,9 +65,14 @@ async function checkForChangedPaths(
   filter.loadFromEntries(pathsToCheck);
   const results = filter.match(changedFiles);
   ctx.logger.info(`Changed files: ${JSON.stringify(results)}`);
+  ctx.logger.info(`Did any files change? ${await didAnyFilesChange(results)}`);
 }
 
 export default checkForChangedPaths;
+
+async function didAnyFilesChange(result: FilterResults) {
+  return Object.values(result).some((files) => files.length > 0);
+}
 
 async function prepareGit(
   branch: string,
