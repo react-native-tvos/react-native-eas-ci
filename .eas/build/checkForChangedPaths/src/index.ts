@@ -10,8 +10,8 @@ import spawnAsync from '@expo/spawn-async';
 import picomatch from 'picomatch';
 import { v4 as uuid } from 'uuid';
 
-import { Filter as PathsFilter } from 'paths-filter/src/filter';
-import * as git from 'paths-filter/src/git';
+import { Filter as PathsFilter } from 'paths-filter/build/filter';
+import * as git from 'paths-filter/build/git';
 
 // Minimatch options used in all matchers
 const MatchOptions = {

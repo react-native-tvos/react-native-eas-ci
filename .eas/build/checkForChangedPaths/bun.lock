@@ -15,7 +15,7 @@
         "@types/picomatch": "^3.0.2",
         "@vercel/ncc": "^0.38.1",
         "glob": "^11.0.1",
-        "paths-filter": "./deps/paths-filter-3.0.2.tgz",
+        "paths-filter": "./deps/paths-filter-3.0.5.tgz",
         "typescript": "^5.5.3",
       },
     },
@@ -173,7 +173,7 @@
 
     "path-scurry": ["path-scurry@2.0.0", "", { "dependencies": { "lru-cache": "^11.0.0", "minipass": "^7.1.2" } }, "sha512-ypGJsmGtdXUOeM5u93TyeIEfEhM6s+ljAhrk5vAvSx8uyY/02OvrZnA0YNGUrPXfpJMgI1ODd3nwz8Npx4O4cg=="],
 
-    "paths-filter": ["paths-filter@./deps/paths-filter-3.0.2.tgz", { "dependencies": { "@actions/core": "^1.10.0", "@actions/exec": "^1.1.1", "@actions/github": "6.0.0", "picomatch": "^2.3.1" } }],
+    "paths-filter": ["paths-filter@./deps/paths-filter-3.0.5.tgz", { "dependencies": { "@actions/core": "^1.10.0", "@actions/exec": "^1.1.1", "@actions/github": "6.0.0", "picomatch": "^2.3.1" } }],
 
     "picomatch": ["picomatch@4.0.2", "", {}, "sha512-M7BAV6Rlcy5u+m6oPhAPFgJTzAioX/6B0DxyvDlo9l8+T3nLKbrczg2WLUyzd45L8RqfUMyGPzekbMvX2Ldkwg=="],
 
