@@ -299,9 +299,9 @@ const executeScriptAsync = async () => {
 
   const version = parseVersion(releaseVersion, 'tvrelease');
 
-  if (parseInt(version.minor, 10) >= 77) {
-    // No need to build Hermes for 77 and later
-    echo(`Hermes build not required for RN 0.77 and later.`);
+  if (parseInt(version.minor, 10) >= 76) {
+    // No need to build Hermes for 76 and later
+    echo(`Hermes build not required for RN 0.76 and later.`);
     return;
   }
 
