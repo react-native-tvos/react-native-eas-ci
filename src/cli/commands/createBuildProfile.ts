@@ -32,6 +32,11 @@ const repoUrl =
   'https://github.com/react-native-tvos/react-native-tvos';
 const devBranch = process.env.CLI_DEV_BRANCH ?? 'tvos-v0.76.0';
 
+const buildLocally =
+  ['true', 'TRUE', '1'].find(
+    (value) => value === process.env.CLI_LOCAL_BUILD,
+  ) !== undefined;
+
 type ProfileKeyType =
   | 'cut_release_branch'
   | 'build_rntester'
@@ -223,7 +228,14 @@ module.exports = {
           buildTypeSelected === 'cut_release_branch' ? 'android' : 'ios';
         await spawnAsync(
           'eas',
-          ['build', '-e', name, '-p', platform, '--no-wait'],
+          [
+            'build',
+            '-e',
+            name,
+            '-p',
+            platform,
+            buildLocally ? '--local' : '--no-wait',
+          ],
           {
             stdio: 'inherit',
           },
