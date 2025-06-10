@@ -3,10 +3,10 @@ build:
   steps:
     - eas/checkout
     - eas/install_node_modules
-    - install_cmake
-    - install_ruby
     - install_java
     - install_android_sdk
+    - install_cmake
+    - install_ruby
     - run:
         name: Build React Native iOS Maven artifacts
         command: |

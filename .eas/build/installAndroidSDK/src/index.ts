@@ -1,8 +1,15 @@
 import { BuildStepContext, BuildStepEnv } from '@expo/steps';
 import spawn from '@expo/spawn-async';
+import glob from 'glob';
+
+const jdkHomePaths = glob.sync(
+  '/opt/homebrew/Cellar/openjdk@17/*/libexec/openjdk.jdk/Contents/Home',
+);
 
 const jdkHomePath =
-  '/opt/homebrew/Cellar/openjdk@17/17.0.14/libexec/openjdk.jdk/Contents/Home';
+  jdkHomePaths.length > 0
+    ? jdkHomePaths[0]
+    : '/opt/homebrew/Cellar/openjdk@17/17.0.15/libexec/openjdk.jdk/Contents/Home';
 
 /**
  * Installs the Android platform tools, build tools, SDK, and NDK.
@@ -89,7 +96,7 @@ async function androidLicensesAsync(env: BuildStepEnv) {
   };
   await spawn('sdkmanager', ['--licenses', '--verbose'], {
     env: localEnv,
-    stdio: 'ignore',
+    stdio: 'inherit',
   });
 }
 
