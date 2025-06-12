@@ -37,6 +37,7 @@ export type PackageJSON = {
   dependencies: { [key: string]: string };
   devDependencies: { [key: string]: string };
   peerDependencies?: { [key: string]: string };
+  scripts: { [key: string]: string };
 };
 
 export type Version = {

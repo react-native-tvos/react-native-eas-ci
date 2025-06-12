@@ -63,27 +63,10 @@ async function executeScriptAsync() {
 
   console.log('Build RNTester app for Apple TV simulator (debug)...');
 
-  await spawnAsync(
-    'xcodebuild',
-    [
-      '-workspace',
-      'RNTesterPods.xcworkspace',
-      '-scheme',
-      'RNTester',
-      '-configuration',
-      'Debug',
-      '-sdk',
-      'appletvsimulator',
-      '-arch',
-      'arm64',
-      '-derivedDataPath',
-      'build',
-    ],
-    {
-      cwd: rnTesterPath,
-      stdio: 'inherit',
-    },
-  );
+  await spawnAsync('yarn', ['build-ios-hermes'], {
+    cwd: rnTesterPath,
+    stdio: 'inherit',
+  });
 
   console.log('Package RNTester Apple TV app in maven_artifacts folder...');
 
