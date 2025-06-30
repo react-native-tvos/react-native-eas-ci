@@ -78,7 +78,8 @@ publishing {
         }
         maven {
             name = 'sonatypeRelease'
-            url = 'https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/'
+            url = 'https://ossrh-staging-api.central.sonatype.com/service/local/staging/deploy/maven2/'
+            // url = 'https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/'
             credentials(PasswordCredentials) {
                 username = sonatypeUsername
                 password = sonatypePassword
@@ -86,7 +87,8 @@ publishing {
         }
         maven {
             name = 'sonatypeSnapshot'
-            url = 'https://s01.oss.sonatype.org/content/repositories/snapshots/'
+            url = 'https://central.sonatype.com/repository/maven-snapshots/'
+            // url = 'https://s01.oss.sonatype.org/content/repositories/snapshots/'
             credentials(PasswordCredentials) {
                 username = sonatypeUsername
                 password = sonatypePassword
