@@ -31,7 +31,7 @@ const {
   isSnapshot,
   publishToSonatype,
 } = repoConstants;
-const { buildDir, mavenArtifactsPath } = easConstants;
+const { buildDir, mavenArtifactsPath, mavenLocalPath } = easConstants;
 
 export const validateAndroidArtifactsAsync = async (releaseVersion: string) => {
   let artifacts = [
@@ -49,12 +49,12 @@ export const validateAndroidArtifactsAsync = async (releaseVersion: string) => {
     if (
       !test(
         '-e',
-        `${process.env.MAVEN_LOCAL_REPO_ARTIFACTS_PATH}/react-android/${releaseVersion}$/${name}`,
+        `${mavenLocalPath}/io/github/react-native-tvos/react-android/${releaseVersion}$/${name}`,
       )
     ) {
       echo(
         `Failing as expected file: \n\
-      ${process.env.MAVEN_LOCAL_REPO_ARTIFACTS_PATH}/react-android/${releaseVersion}/${name}\n\
+      ${mavenLocalPath}/io/github/react-native-tvos/react-android/${releaseVersion}/${name}\n\
       was not correctly generated.`,
       );
       return false;
