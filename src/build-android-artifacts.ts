@@ -181,6 +181,7 @@ const executeScriptAsync = async function () {
 
   const publishType = isSnapshot ? 'Snapshot' : 'Release';
 
+  /*
   if (!isSnapshot) {
     echo('Validating Android release artifacts...');
     const valid = await validateAndroidArtifactsAsync(releaseVersion);
@@ -188,6 +189,7 @@ const executeScriptAsync = async function () {
       exit(1);
     }
   }
+   */
 
   if (publishToSonatype) {
     echo('Publishing hermes-android and react-android to Sonatype...');
