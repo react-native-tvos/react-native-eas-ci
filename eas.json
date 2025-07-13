@@ -13,7 +13,8 @@
         "image": "latest"
       },
       "withoutCredentials": true,
-      "distribution": "internal"
+      "distribution": "internal",
+      "node": "22.14.0"
     },
     "maven_android_artifacts": {
       "extends": "base",
