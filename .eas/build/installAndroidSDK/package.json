@@ -13,6 +13,7 @@
   "devDependencies": {
     "@expo/steps": "^1.0.75",
     "@types/node": "20.14.2",
+    "glob": "^10.4.2",
     "typescript": "^5.3.3"
   },
   "dependencies": {
