@@ -4,8 +4,10 @@ build:
     - eas/checkout
     - eas/install_node_modules
     - install_cmake
-    - install_java
-    - install_android_sdk
+    - run:
+        name: Install Java and Android SDK
+        command: |
+          ./scripts/install-android-sdk.sh
     - run:
         name: Build React Native Android Maven artifacts
         command: |
@@ -26,12 +28,6 @@ build:
             maven_artifacts/*.tgz
 
 functions:
-  install_java:
-    name: Install Java
-    path: ./installJava
   install_cmake:
     name: Install Cmake
     path: ./installCmake
-  install_android_sdk:
-    name: Install Android SDK
-    path: ./installAndroidSDK
