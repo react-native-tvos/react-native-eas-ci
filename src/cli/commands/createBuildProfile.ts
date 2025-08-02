@@ -79,7 +79,8 @@ const buildProfile = (
       REACT_NATIVE_RELEASE_VERSION: releaseVersion,
       REACT_NATIVE_CORE_VERSION: baseCoreVersionStringForTV(releaseVersion),
       INCLUDE_VISION_OS: 'false',
-      PUBLISH_TO_SONATYPE: buildType === 'complete_release' ? 'true' : 'false',
+      // PUBLISH_TO_SONATYPE: buildType === 'complete_release' ? 'true' : 'false',
+      PUBLISH_TO_SONATYPE: 'false',
       PUSH_RELEASE_TO_REPO: buildType === 'build_rntester' ? 'false' : 'true',
     },
   };
