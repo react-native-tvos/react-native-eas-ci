@@ -4,7 +4,10 @@ build:
     - eas/checkout
     - eas/install_node_modules
     - install_cmake
-    - install_ruby
+    - run:
+        name: Install Ruby
+        command: |
+          ./scripts/install-ruby.sh
     - run:
         name: Update Podfile.lock and push to branch
         command: |
@@ -14,6 +17,3 @@ functions:
   install_cmake:
     name: Install Cmake
     path: ./installCmake
-  install_ruby:
-    name: Install Ruby
-    path: ./installRuby
